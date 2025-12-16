@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Tyre Simulator | Tyre Dispatch NZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="tutorial-overlay hidden">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h2>Welcome to the EU Tyre Grade Test</h2>
+                <p>Learn how tyre grades affect your stopping distance</p>
+            </div>
+            <div class="tutorial-steps">
+                <div class="tutorial-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Configure Your Tyre</h3>
+                        <p>Select your EU wet grip grade (A-E), tread depth, weather conditions, and tyre age. Each factor affects how quickly you can stop.</p>
+                    </div>
+                </div>
+                <div class="tutorial-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Accelerate Your Vehicle</h3>
+                        <p>Hold the <strong>ACCELERATE</strong> button or <strong>SPACEBAR</strong> to build up speed. The faster you go, the longer it takes to stop!</p>
+                    </div>
+                </div>
+                <div class="tutorial-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Hit the Brakes</h3>
+                        <p>Release accelerate and click <strong>BRAKE</strong> to see your stopping distance. Compare how different grades perform!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tutorial-footer">
+                <label class="dont-show-again">
+                    <input type="checkbox" id="dont-show-tutorial">
+                    <span>Don't show this again</span>
+                </label>
+                <button id="tutorial-start-btn" class="tutorial-btn">GOT IT, LET'S GO!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="screen active">
+        <div class="menu-container">
+            <div class="logo-section">
+                <h1 class="game-title">EU TYRE GRADE BRAKING TEST</h1>
+                <p class="subtitle">See how tyre factors affect real-world stopping distance</p>
+                <p class="physics-badge">Powered by UltimateBrakingPhysics v3.4.3</p>
+            </div>
+
+            <!-- Grade Selection -->
+            <div class="selection-section">
+                <h2>EU Wet Grip Grade <button class="info-btn" data-tooltip="grade">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-grade">
+                    <div class="tooltip-content">
+                        <h4>EU Tyre Label - Wet Grip (A-E)</h4>
+                        <div class="eu-label-preview">
+                            <img src="https://cdn.shopify.com/s/files/1/0341/5608/5379/files/Screenshot_2025-12-14_025020.png?v=1765633842" alt="EU Tyre Label Example" class="eu-label-image">
+                            <div class="label-callouts">
+                                <span class="callout callout-1">1. Fuel Efficiency (A-E)</span>
+                                <span class="callout callout-2">2. Wet Grip (A-E) - <strong>This simulator!</strong></span>
+                                <span class="callout callout-3">3. Noise Level (dB)</span>
+                                <span class="callout callout-4">4. Noise Class (A-C)</span>
+                                <span class="callout callout-5">5. Snow Grip (3PMSF)</span>
+                                <span class="callout callout-6">6. Ice Grip</span>
+                            </div>
+                        </div>
+                        <p>The <strong>Wet Grip rating</strong> is a critical safety feature - it indicates braking distance on wet asphalt. The difference between grades can mean <strong>3-6 extra metres</strong> per class!</p>
+                        <ul>
+                            <li><strong>A:</strong> Shortest braking - 15% grip bonus in wet</li>
+                            <li><strong>B:</strong> Great - 6% grip bonus</li>
+                            <li><strong>C:</strong> Baseline performance</li>
+                            <li><strong>D:</strong> Longer braking - 11% grip penalty</li>
+                            <li><strong>E:</strong> Longest braking - 20% grip penalty</li>
+                        </ul>
+                        <p class="tooltip-note">Look for this label on tyre sidewalls or in product listings. Wet grip decreases as tread wears!</p>
+                        <p class="tooltip-source">Source: EU Regulation 2020/740 | <a href="https://energy-efficient-products.ec.europa.eu/product-list/tyres_en" target="_blank">EC Energy Label Database</a></p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="grade-selector">
+                    <button class="grade-btn active" data-grade="A" aria-label="Select EU Grade A - Best wet grip performance">
+                        <span class="grade-letter">A</span>
+                        <span class="grade-rating">Best</span>
+                    </button>
+                    <button class="grade-btn" data-grade="B" aria-label="Select EU Grade B - Great wet grip performance">
+                        <span class="grade-letter">B</span>
+                        <span class="grade-rating">Great</span>
+                    </button>
+                    <button class="grade-btn" data-grade="C" aria-label="Select EU Grade C - Good wet grip performance">
+                        <span class="grade-letter">C</span>
+                        <span class="grade-rating">Good</span>
+                    </button>
+                    <button class="grade-btn" data-grade="D" aria-label="Select EU Grade D - Fair wet grip performance">
+                        <span class="grade-letter">D</span>
+                        <span class="grade-rating">Fair</span>
+                    </button>
+                    <button class="grade-btn" data-grade="E" aria-label="Select EU Grade E - Poor wet grip performance">
+                        <span class="grade-letter">E</span>
+                        <span class="grade-rating">Poor</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- EU Fuel Economy Grade -->
+            <div class="selection-section">
+                <h2>EU Fuel Economy Grade <button class="info-btn" data-tooltip="fueleco">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-fueleco">
+                    <div class="tooltip-content">
+                        <h4>EU Tyre Label - Fuel Efficiency (A-E)</h4>
+                        <p>The <strong>Fuel Efficiency rating</strong> indicates rolling resistance (RRC) - how much energy the tyre loses as it rolls.</p>
+                        <ul>
+                            <li><strong>A:</strong> RRC ≤ 6.5 - Best fuel economy</li>
+                            <li><strong>B:</strong> RRC 6.6-7.7 - Very good</li>
+                            <li><strong>C:</strong> RRC 7.8-9.0 - Average</li>
+                            <li><strong>D:</strong> RRC 9.1-10.5 - Below average</li>
+                            <li><strong>E:</strong> RRC ≥ 10.6 - Highest resistance</li>
+                        </ul>
+                        <div class="fuel-impact">
+                            <h5>Effect on braking:</h5>
+                            <p><strong>Negligible for normal braking</strong> (&lt;0.5% effect). Rolling resistance contributes ~0.05-0.10 m/s² vs braking friction at ~7-10 m/s².</p>
+                            <p>This setting only significantly affects <strong>coasting scenarios</strong> - when brakes cannot overcome gravity (steep downhill + low friction surfaces).</p>
+                            <p class="tooltip-note"><strong>For braking performance, the EU Wet Grip grade (above) is the relevant measure.</strong></p>
+                        </div>
+                        <p class="tooltip-note">EU Reg. 2020/740 (C1 tyres). Look for the fuel pump icon on the EU tyre label.</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="fuel-grade-selector">
+                    <button class="fuel-grade-btn active" data-fuelgrade="A" aria-label="Select EU Fuel Grade A - Best fuel efficiency">
+                        <span class="fuel-grade-letter">A</span>
+                        <span class="fuel-grade-rating">Best</span>
+                    </button>
+                    <button class="fuel-grade-btn" data-fuelgrade="B" aria-label="Select EU Fuel Grade B - Great fuel efficiency">
+                        <span class="fuel-grade-letter">B</span>
+                        <span class="fuel-grade-rating">Great</span>
+                    </button>
+                    <button class="fuel-grade-btn" data-fuelgrade="C" aria-label="Select EU Fuel Grade C - Good fuel efficiency">
+                        <span class="fuel-grade-letter">C</span>
+                        <span class="fuel-grade-rating">Good</span>
+                    </button>
+                    <button class="fuel-grade-btn" data-fuelgrade="D" aria-label="Select EU Fuel Grade D - Fair fuel efficiency">
+                        <span class="fuel-grade-letter">D</span>
+                        <span class="fuel-grade-rating">Fair</span>
+                    </button>
+                    <button class="fuel-grade-btn" data-fuelgrade="E" aria-label="Select EU Fuel Grade E - Poor fuel efficiency">
+                        <span class="fuel-grade-letter">E</span>
+                        <span class="fuel-grade-rating">Poor</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vehicle Type Selection -->
+            <div class="selection-section">
+                <h2>Vehicle & Weight <button class="info-btn" data-tooltip="vehicle">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-vehicle">
+                    <div class="tooltip-content">
+                        <h4>Vehicle Weight & Braking</h4>
+                        <p>Heavier vehicles require more distance to stop due to increased momentum. Weight affects tyre load distribution and braking dynamics.</p>
+                        <ul>
+                            <li><strong>Hatchback:</strong> ~1200kg - Light, responsive braking</li>
+                            <li><strong>Sedan:</strong> ~1500kg - Standard performance</li>
+                            <li><strong>SUV:</strong> ~2000kg - Higher center of gravity</li>
+                            <li><strong>Ute/Truck:</strong> ~2500kg - Heavy, longer stopping</li>
+                        </ul>
+                        <p>You can enter your exact vehicle weight below, or select a preset.</p>
+                        <p class="tip">Find your vehicle's kerb weight on the driver's door jamb sticker or in the owner's manual.</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="vehicle-selector">
+                    <button class="vehicle-btn" data-vehicle="hatchback" data-weight="1200" aria-label="Select hatchback - approximately 1200 kilograms">
+                        <span class="vehicle-icon">🚗</span>
+                        <span class="vehicle-label">Hatchback</span>
+                        <span class="vehicle-weight">~1200kg</span>
+                    </button>
+                    <button class="vehicle-btn active" data-vehicle="sedan" data-weight="1500" aria-label="Select sedan - approximately 1500 kilograms">
+                        <span class="vehicle-icon">🚙</span>
+                        <span class="vehicle-label">Sedan</span>
+                        <span class="vehicle-weight">~1500kg</span>
+                    </button>
+                    <button class="vehicle-btn" data-vehicle="suv" data-weight="2000" aria-label="Select SUV - approximately 2000 kilograms">
+                        <span class="vehicle-icon">🚐</span>
+                        <span class="vehicle-label">SUV</span>
+                        <span class="vehicle-weight">~2000kg</span>
+                    </button>
+                    <button class="vehicle-btn" data-vehicle="truck" data-weight="2500" aria-label="Select ute or truck - approximately 2500 kilograms">
+                        <span class="vehicle-icon">🛻</span>
+                        <span class="vehicle-label">Ute/Truck</span>
+                        <span class="vehicle-weight">~2500kg</span>
+                    </button>
+                </div>
+                <div class="weight-input-container">
+                    <label for="vehicle-weight-input">Or enter exact weight:</label>
+                    <div class="weight-input-row">
+                        <input type="number" id="vehicle-weight-input" min="500" max="10000" value="1500" class="weight-input">
+                        <span class="weight-unit">kg</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tyre Size Input -->
+            <div class="selection-section">
+                <h2>Tyre Size <button class="info-btn" data-tooltip="tyresize">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-tyresize">
+                    <div class="tooltip-content">
+                        <h4>Understanding Tyre Sizes</h4>
+                        <p>Enter your tyre size to automatically set width and max tread depth.</p>
+                        <div class="size-explanation">
+                            <h5>Metric Format (most common):</h5>
+                            <p><strong>205/55R16</strong> = Width 205mm / Aspect 55% / Rim 16"</p>
+                            <p><strong>265/60R18</strong> = Width 265mm / Aspect 60% / Rim 18"</p>
+
+                            <h5>Imperial Format (4WD/trucks):</h5>
+                            <p><strong>31x10.5R15</strong> = Diameter 31" / Width 10.5" / Rim 15"</p>
+                            <p><strong>33x12.5R17</strong> = Diameter 33" / Width 12.5" / Rim 17"</p>
+                        </div>
+                        <div class="tread-depth-info">
+                            <h5>Max Tread Depth by Tyre Size:</h5>
+                            <ul>
+                                <li><strong>Small (155-185mm):</strong> ~7-8mm new tread</li>
+                                <li><strong>Standard (195-215mm):</strong> ~8-9mm new tread</li>
+                                <li><strong>Large (225-255mm):</strong> ~9-12mm new tread</li>
+                                <li><strong>4WD/Truck (265mm+):</strong> ~12-16mm new tread</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="tyre-size-container">
+                    <div class="tyre-size-input-row">
+                        <input type="text" id="tyre-size-input" placeholder="e.g., 205/55R16 or 31x10.5R15" class="tyre-size-input" value="205/55R16">
+                        <button id="parse-tyre-size-btn" class="parse-size-btn">Apply</button>
+                    </div>
+                    <div class="tyre-size-parsed" id="tyre-size-parsed">
+                        <div class="parsed-item">
+                            <span class="parsed-label">Width:</span>
+                            <span class="parsed-value" id="parsed-width">205mm</span>
+                        </div>
+                        <div class="parsed-item">
+                            <span class="parsed-label">Max Tread:</span>
+                            <span class="parsed-value" id="parsed-max-tread">8mm</span>
+                        </div>
+                    </div>
+                    <div class="tyre-size-error hidden" id="tyre-size-error">
+                        <span class="error-icon">⚠️</span>
+                        <span class="error-text">Invalid tyre size format</span>
+                    </div>
+                    <div class="quick-sizes">
+                        <span class="quick-label">Common:</span>
+                        <button class="quick-size-btn" data-size="195/65R15">195/65R15</button>
+                        <button class="quick-size-btn" data-size="205/55R16">205/55R16</button>
+                        <button class="quick-size-btn" data-size="225/45R17">225/45R17</button>
+                        <button class="quick-size-btn" data-size="265/60R18">265/60R18</button>
+                        <button class="quick-size-btn" data-size="31x10.5R15">31x10.5R15</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tread Depth Selection -->
+            <div class="selection-section">
+                <h2>Tread Depth <button class="info-btn" data-tooltip="tread">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-tread">
+                    <div class="tooltip-content">
+                        <h4>Tread Depth Matters</h4>
+                        <p>Tread grooves channel water away from the tyre. Less tread = less water evacuation = longer stopping distances.</p>
+                        <ul>
+                            <li><strong>8mm (New):</strong> Full performance</li>
+                            <li><strong>5mm:</strong> Still good, monitor regularly</li>
+                            <li><strong>3mm:</strong> Replace soon - grip drops sharply below 4mm</li>
+                            <li><strong>1.6mm:</strong> NZ legal minimum - <span style="color: #ef4444;">DANGEROUS in wet!</span></li>
+                        </ul>
+                        <div class="how-to-check">
+                            <h5>How to Check Your Tread Depth:</h5>
+                            <ol>
+                                <li><strong>Tread Wear Indicators (TWI):</strong> Look for small raised bars in the tread grooves. If tread is level with these, you're at 1.6mm - replace immediately!</li>
+                                <li><strong>20c Coin Test:</strong> Insert a NZ 20c coin into the groove. If you can see the "20" text, your tread is below 3mm.</li>
+                                <li><strong>Tread Depth Gauge:</strong> Available at auto stores for ~$5. Most accurate method.</li>
+                                <li><strong>Check Multiple Spots:</strong> Measure at least 3 places across the tyre - uneven wear indicates alignment issues.</li>
+                            </ol>
+                        </div>
+                        <p>At 1.6mm, wet stopping distance can be <strong>nearly double</strong> compared to new tyres. Below 4mm, grip performance drops dramatically!</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="tread-selector">
+                    <button class="tread-btn active" data-tread="new" aria-label="Select new tread depth - 8mm">
+                        <span class="tread-icon">🟢</span>
+                        <span class="tread-label">New</span>
+                        <span class="tread-value">8mm</span>
+                    </button>
+                    <button class="tread-btn" data-tread="good" aria-label="Select good tread depth - 5mm">
+                        <span class="tread-icon">🟡</span>
+                        <span class="tread-label">Good</span>
+                        <span class="tread-value">5mm</span>
+                    </button>
+                    <button class="tread-btn" data-tread="worn" aria-label="Select worn tread depth - 3mm">
+                        <span class="tread-icon">🟠</span>
+                        <span class="tread-label">Worn</span>
+                        <span class="tread-value">3mm</span>
+                    </button>
+                    <button class="tread-btn" data-tread="legal" aria-label="Select legal minimum tread depth - 1.6mm, dangerous in wet">
+                        <span class="tread-icon">🔴</span>
+                        <span class="tread-label">Legal Min</span>
+                        <span class="tread-value">1.6mm</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weather Selection -->
+            <div class="selection-section">
+                <h2>Weather Conditions <button class="info-btn" data-tooltip="weather">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-weather">
+                    <div class="tooltip-content">
+                        <h4>Weather & Water Depth</h4>
+                        <p>More water on the road means less rubber-to-road contact and lower grip.</p>
+                        <ul>
+                            <li><strong>Dry:</strong> Best grip - full tyre contact</li>
+                            <li><strong>Damp:</strong> Slight film (0.1mm) - minor impact</li>
+                            <li><strong>Light Rain:</strong> 0.3mm water depth</li>
+                            <li><strong>Rain:</strong> 0.7mm - significant grip reduction</li>
+                            <li><strong>Heavy Rain:</strong> 1.5mm - <span style="color: #ef4444;">Major grip loss!</span></li>
+                        </ul>
+                        <p>EU Wet Grip grades matter most when roads are wet!</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="weather-selector">
+                    <button class="weather-btn active" data-weather="DRY" aria-label="Select dry weather - best grip conditions">
+                        <span class="weather-icon">☀️</span>
+                        <span class="weather-label">Dry</span>
+                    </button>
+                    <button class="weather-btn" data-weather="DAMP" aria-label="Select damp weather - slight moisture on road">
+                        <span class="weather-icon">🌫️</span>
+                        <span class="weather-label">Damp</span>
+                    </button>
+                    <button class="weather-btn" data-weather="LIGHT_RAIN" aria-label="Select light rain - 0.3mm water depth">
+                        <span class="weather-icon">🌦️</span>
+                        <span class="weather-label">Light Rain</span>
+                    </button>
+                    <button class="weather-btn" data-weather="RAIN" aria-label="Select rain - 0.7mm water depth">
+                        <span class="weather-icon">🌧️</span>
+                        <span class="weather-label">Rain</span>
+                    </button>
+                    <button class="weather-btn" data-weather="HEAVY_RAIN" aria-label="Select heavy rain - 1.5mm water depth, major grip loss">
+                        <span class="weather-icon">⛈️</span>
+                        <span class="weather-label">Heavy</span>
+                    </button>
+                    <button class="weather-btn" data-weather="CUSTOM" aria-label="Select custom water depth">
+                        <span class="weather-icon">🎚️</span>
+                        <span class="weather-label">Custom</span>
+                    </button>
+                </div>
+
+                <!-- Custom Water Depth Control -->
+                <div class="custom-water-depth" id="custom-water-section" style="display: none;">
+                    <div class="water-depth-header">
+                        <label for="water-depth-slider">Water Depth on Road Surface</label>
+                        <span class="water-depth-value" id="water-depth-value">0.7mm</span>
+                    </div>
+                    <input type="range" id="water-depth-slider" min="0" max="50" value="7" step="1" class="water-depth-slider">
+                    <div class="water-depth-scale">
+                        <span>0mm<br><small>Dry</small></span>
+                        <span>1mm<br><small>Wet</small></span>
+                        <span>2.5mm<br><small>Pooling</small></span>
+                        <span>5mm<br><small>Flooding</small></span>
+                    </div>
+                    <div class="water-depth-disclaimer">
+                        <strong>Note:</strong> Water depth depends on rainfall intensity, duration, and drainage.
+                        Typical values after <strong>10+ minutes</strong> of sustained rain:
+                        <ul>
+                            <li>Light rain (2mm/hr): ~0.2-0.5mm on well-drained roads</li>
+                            <li>Moderate rain (5mm/hr): ~0.5-1.5mm</li>
+                            <li>Heavy rain (15mm/hr): ~1.5-3mm</li>
+                            <li>Torrential (30mm/hr): ~3-5mm+ (hydroplaning likely!)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tyre Age Slider -->
+            <div class="selection-section">
+                <h2>Tyre Age <button class="info-btn" data-tooltip="age">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-age">
+                    <div class="tooltip-content">
+                        <h4>Rubber Degrades Over Time</h4>
+                        <p>Even unused tyres lose grip as rubber oxidises and hardens. This happens regardless of tread depth!</p>
+                        <ul>
+                            <li><strong>0-3 years:</strong> Full performance</li>
+                            <li><strong>4-5 years:</strong> Monitor condition</li>
+                            <li><strong>6-8 years:</strong> 15-20% grip loss - consider replacing</li>
+                            <li><strong>10+ years:</strong> 30%+ grip loss - <span style="color: #ef4444;">REPLACE regardless of tread!</span></li>
+                        </ul>
+                        <p>Check the DOT code on your sidewall to find manufacture date.</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="age-slider-container">
+                    <input type="range" id="age-slider" min="0" max="10" value="0" class="age-slider">
+                    <div class="age-labels">
+                        <span>New</span>
+                        <span id="age-value">New</span>
+                        <span>10 years</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tyre Type Selection -->
+            <div class="selection-section">
+                <h2>Tyre Type <button class="info-btn" data-tooltip="tyretype">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-tyretype">
+                    <div class="tooltip-content">
+                        <h4>Tyre Compound Types</h4>
+                        <p>Different tyres use rubber compounds optimised for specific temperature ranges.</p>
+                        <ul>
+                            <li><strong>Summer:</strong> Best above 7°C. Hardens in cold, losing grip. <em>Most common in NZ - fitted to nearly all new vehicles.</em></li>
+                            <li><strong>All-Season:</strong> Compromise for year-round use. Moderate performance in all conditions. <em>Growing in popularity in NZ, especially South Island.</em></li>
+                            <li><strong>Winter (3PMSF):</strong> Softer compound stays flexible below 7°C. +8-15% wet/snow grip in cold. Look for Alpine symbol (mountain with snowflake). <em>Essential for NZ ski trips or South Island winter driving.</em></li>
+                        </ul>
+                        <div class="nz-context">
+                            <h5>What's on NZ Roads?</h5>
+                            <p><strong>~85% Summer tyres</strong> - Most passenger vehicles<br>
+                            <strong>~12% All-Season</strong> - SUVs, South Island vehicles<br>
+                            <strong>~3% Winter</strong> - Alpine areas, ski enthusiasts</p>
+                            <p class="tip">If you drive to the snow or through Central Otago in winter, consider All-Season or Winter tyres!</p>
+                        </div>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="tyretype-selector">
+                    <button class="tyretype-btn active" data-tyretype="summer" aria-label="Select summer tyres - best above 7 degrees Celsius">
+                        <span class="tyretype-icon">☀️</span>
+                        <span class="tyretype-label">Summer</span>
+                    </button>
+                    <button class="tyretype-btn" data-tyretype="allseason" aria-label="Select all-season tyres - year-round use">
+                        <span class="tyretype-icon">🍂</span>
+                        <span class="tyretype-label">All-Season</span>
+                    </button>
+                    <button class="tyretype-btn" data-tyretype="winter" aria-label="Select winter tyres - best below 7 degrees Celsius">
+                        <span class="tyretype-icon">❄️</span>
+                        <span class="tyretype-label">Winter</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tyre Pressure Slider -->
+            <div class="selection-section">
+                <h2>Tyre Pressure <button class="info-btn" data-tooltip="pressure">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-pressure">
+                    <div class="tooltip-content">
+                        <h4>Pressure Affects Contact Patch</h4>
+                        <p>Incorrect pressure changes how the tyre contacts the road, affecting grip and wear.</p>
+                        <ul>
+                            <li><strong>Under-inflated:</strong> More rolling resistance, uneven wear, reduced grip</li>
+                            <li><strong>Optimal (32 PSI):</strong> Full contact patch, best grip and fuel economy</li>
+                            <li><strong>Over-inflated:</strong> Smaller contact patch, harsher ride, center wear</li>
+                        </ul>
+                        <p>Check your door jamb sticker for recommended pressure. Check when tyres are cold.</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="pressure-slider-container">
+                    <input type="range" id="pressure-slider" min="20" max="45" value="32" class="pressure-slider">
+                    <div class="pressure-labels">
+                        <span>20 PSI</span>
+                        <span id="pressure-value" class="pressure-optimal">32 PSI (Optimal)</span>
+                        <span>45 PSI</span>
+                    </div>
+                    <div class="pressure-warning hidden" id="pressure-warning">
+                        <span class="warning-icon">⚠️</span>
+                        <span class="warning-text" id="pressure-warning-text"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Surface/Terrain Selection -->
+            <div class="selection-section">
+                <h2>Road Surface <button class="info-btn" data-tooltip="surface">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-surface">
+                    <div class="tooltip-content">
+                        <h4>Road Surface Types</h4>
+                        <p>Different road surfaces provide vastly different levels of grip. This has one of the largest impacts on stopping distance!</p>
+                        <ul>
+                            <li><strong>Asphalt:</strong> Standard sealed roads - baseline grip</li>
+                            <li><strong>Concrete:</strong> Highways, bridges - slightly lower wet grip</li>
+                            <li><strong>Gravel:</strong> Unsealed NZ country roads - reduced grip</li>
+                            <li><strong>Dirt:</strong> Farm tracks, off-road - low grip</li>
+                            <li><strong>Mud:</strong> Wet earth - <span style="color: #f59e0b;">Very slippery!</span></li>
+                            <li><strong>Grass:</strong> Paddocks, verges - <span style="color: #f59e0b;">Unpredictable grip</span></li>
+                            <li><strong>Sand/Beach:</strong> Soft surface - <span style="color: #f59e0b;">Sinking risk</span></li>
+                            <li><strong>Snow:</strong> Compacted snow - <span style="color: #60a5fa;">Winter tyres recommended</span></li>
+                            <li><strong>Ice:</strong> Frozen surface - <span style="color: #ef4444;">Extremely dangerous!</span></li>
+                        </ul>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="surface-selector-grid">
+                    <button class="surface-btn active" data-surface="ASPHALT_STD" aria-label="Select asphalt road surface - standard grip">
+                        <span class="surface-icon">🛣️</span>
+                        <span class="surface-label">Asphalt</span>
+                    </button>
+                    <button class="surface-btn" data-surface="CONCRETE" aria-label="Select concrete road surface - slightly lower wet grip">
+                        <span class="surface-icon">🏗️</span>
+                        <span class="surface-label">Concrete</span>
+                    </button>
+                    <button class="surface-btn" data-surface="GRAVEL" aria-label="Select gravel road surface - reduced grip">
+                        <span class="surface-icon">🪨</span>
+                        <span class="surface-label">Gravel</span>
+                    </button>
+                    <button class="surface-btn" data-surface="DIRT" aria-label="Select dirt road surface - low grip">
+                        <span class="surface-icon">🌍</span>
+                        <span class="surface-label">Dirt</span>
+                    </button>
+                    <button class="surface-btn" data-surface="MUD" aria-label="Select mud surface - very slippery">
+                        <span class="surface-icon">🟤</span>
+                        <span class="surface-label">Mud</span>
+                    </button>
+                    <button class="surface-btn" data-surface="GRASS" aria-label="Select grass surface - unpredictable grip">
+                        <span class="surface-icon">🌿</span>
+                        <span class="surface-label">Grass</span>
+                    </button>
+                    <button class="surface-btn" data-surface="SAND" aria-label="Select sand surface - soft, sinking risk">
+                        <span class="surface-icon">🏖️</span>
+                        <span class="surface-label">Sand</span>
+                    </button>
+                    <button class="surface-btn" data-surface="SNOW" aria-label="Select snow surface - winter tyres recommended">
+                        <span class="surface-icon">🌨️</span>
+                        <span class="surface-label">Snow</span>
+                    </button>
+                    <button class="surface-btn" data-surface="ICE" aria-label="Select ice surface - extremely dangerous">
+                        <span class="surface-icon">🧊</span>
+                        <span class="surface-label">Ice</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trailer Section -->
+            <div class="selection-section trailer-section">
+                <h2>Trailer <button class="info-btn" data-tooltip="trailer">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-trailer">
+                    <div class="tooltip-content">
+                        <h4>Towing a Trailer?</h4>
+                        <p>Trailers significantly affect braking distance due to added weight and momentum. Trailer brakes (if fitted) help, but the tow vehicle still does most of the work.</p>
+                        <ul>
+                            <li><strong>Unbraked trailer:</strong> Max 750kg in NZ - all braking from tow vehicle</li>
+                            <li><strong>Braked trailer:</strong> Required over 750kg - has own braking system</li>
+                        </ul>
+                        <p class="warning">Trailers can increase stopping distance by 20-50% depending on load!</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="trailer-toggle">
+                    <button class="trailer-btn active" data-trailer="none">
+                        <span class="trailer-icon">🚫</span>
+                        <span class="trailer-label">No Trailer</span>
+                    </button>
+                    <button class="trailer-btn" data-trailer="unbraked">
+                        <span class="trailer-icon">🚚</span>
+                        <span class="trailer-label">Unbraked</span>
+                    </button>
+                    <button class="trailer-btn" data-trailer="braked">
+                        <span class="trailer-icon">🚛</span>
+                        <span class="trailer-label">Braked</span>
+                    </button>
+                </div>
+                <div class="trailer-config hidden" id="trailer-config">
+                    <div class="trailer-weight-row">
+                        <label>Trailer + Load Weight:</label>
+                        <div class="weight-input-row">
+                            <input type="number" id="trailer-weight-input" min="100" max="3500" value="500" class="weight-input">
+                            <span class="weight-unit">kg</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Temperature Slider -->
+            <div class="selection-section">
+                <h2>Outside Air Temperature <button class="info-btn" data-tooltip="temp">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-temp">
+                    <div class="tooltip-content">
+                        <h4>Air Temperature & Tyre Grip</h4>
+                        <p><strong>"Ambient temperature"</strong> means the outside air temperature - this affects both the road surface temperature and your tyre's rubber compound performance.</p>
+                        <ul>
+                            <li><strong>Below 7°C:</strong> Summer tyres harden and lose grip. Winter tyres excel in cold. Road may be icy!</li>
+                            <li><strong>7-25°C:</strong> Optimal range for most summer/all-season tyres</li>
+                            <li><strong>Above 30°C:</strong> Asphalt softens. Tyres heat up faster. Grip can actually improve slightly.</li>
+                            <li><strong>Above 40°C:</strong> Extreme heat - risk of tyre overheating, reduced grip, increased wear</li>
+                        </ul>
+                        <p>The 7°C threshold is why winter tyres are legally required in many European countries.</p>
+                        <p class="tip">Check your car's outside temperature display or local weather forecast!</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="temp-slider-container">
+                    <input type="range" id="temp-slider" min="-10" max="45" value="20" class="temp-slider">
+                    <div class="temp-labels">
+                        <span>-10°C</span>
+                        <span id="temp-value" class="temp-optimal">20°C</span>
+                        <span>45°C</span>
+                    </div>
+                    <div class="temp-warning hidden" id="temp-warning">
+                        <span class="warning-icon">⚠️</span>
+                        <span class="warning-text" id="temp-warning-text"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wind Conditions -->
+            <div class="selection-section">
+                <h2>Wind Conditions <button class="info-btn" data-tooltip="wind">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-wind">
+                    <div class="tooltip-content">
+                        <h4>Wind & Braking</h4>
+                        <p>Wind affects braking distance through aerodynamic drag. A strong headwind helps slow you down, while a tailwind makes it harder to stop.</p>
+                        <ul>
+                            <li><strong>Calm (0-15 km/h):</strong> Negligible effect</li>
+                            <li><strong>Moderate (15-40 km/h):</strong> Slight effect on high-profile vehicles</li>
+                            <li><strong>Strong (40-70 km/h):</strong> Noticeable effect, especially on trucks/trailers</li>
+                            <li><strong>Severe (70+ km/h):</strong> Significant effect - can add/reduce several metres</li>
+                        </ul>
+                        <p>Effect is more pronounced at higher vehicle speeds and on lighter vehicles with larger surface area.</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="wind-controls">
+                    <div class="wind-speed-container">
+                        <label>Wind Speed:</label>
+                        <input type="range" id="wind-speed-slider" min="0" max="100" value="0" class="wind-slider">
+                        <div class="wind-speed-labels">
+                            <span>Calm</span>
+                            <span id="wind-speed-value">0 km/h</span>
+                            <span>100 km/h</span>
+                        </div>
+                    </div>
+                    <div class="wind-direction-container">
+                        <label>Wind Direction:</label>
+                        <div class="wind-direction-selector">
+                            <button class="wind-dir-btn" data-direction="headwind">
+                                <span class="wind-arrow">⬆️</span>
+                                <span>Headwind</span>
+                                <span class="wind-effect">(helps braking)</span>
+                            </button>
+                            <button class="wind-dir-btn active" data-direction="crosswind">
+                                <span class="wind-arrow">➡️</span>
+                                <span>Crosswind</span>
+                                <span class="wind-effect">(stability risk)</span>
+                            </button>
+                            <button class="wind-dir-btn" data-direction="tailwind">
+                                <span class="wind-arrow">⬇️</span>
+                                <span>Tailwind</span>
+                                <span class="wind-effect">(longer stopping)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABS Toggle -->
+            <div class="selection-section">
+                <h2>ABS System <button class="info-btn" data-tooltip="abs">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-abs">
+                    <div class="tooltip-content">
+                        <h4>Anti-lock Braking System</h4>
+                        <p>ABS prevents wheel lock-up during emergency braking, allowing you to steer while braking.</p>
+                        <ul>
+                            <li><strong>With ABS:</strong> Wheels pulse rapidly, maintaining traction. ~10-15% better braking on wet roads.</li>
+                            <li><strong>Without ABS:</strong> Wheels can lock, leading to skidding and loss of steering control.</li>
+                        </ul>
+                        <p>ABS is mandatory on all new vehicles sold in NZ since 2015.</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="abs-toggle-container">
+                    <button class="abs-btn active" data-abs="true" aria-label="Enable ABS - anti-lock braking system on">
+                        <span class="abs-icon">✓</span>
+                        <span class="abs-label">ABS ON</span>
+                    </button>
+                    <button class="abs-btn" data-abs="false" aria-label="Disable ABS - anti-lock braking system off">
+                        <span class="abs-icon">✗</span>
+                        <span class="abs-label">ABS OFF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Road Slope/Gradient -->
+            <div class="selection-section">
+                <h2>Road Slope <button class="info-btn" data-tooltip="slope">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-slope">
+                    <div class="tooltip-content">
+                        <h4>Road Gradient & Braking</h4>
+                        <p>Road slope has a significant impact on braking distance due to gravity's effect on the vehicle.</p>
+                        <ul>
+                            <li><strong>Uphill (+):</strong> Gravity helps slow the vehicle - shorter stopping distance</li>
+                            <li><strong>Flat (0°):</strong> Normal braking conditions</li>
+                            <li><strong>Downhill (-):</strong> Gravity works against braking - longer stopping distance</li>
+                        </ul>
+                        <div class="slope-examples">
+                            <h5>Common NZ Road Grades:</h5>
+                            <ul>
+                                <li><strong>±2°:</strong> Typical highway</li>
+                                <li><strong>±5°:</strong> Hilly urban roads</li>
+                                <li><strong>±10°:</strong> Mountain passes (e.g., Rimutaka Hill)</li>
+                                <li><strong>±15°:</strong> Extreme grades (rare)</li>
+                            </ul>
+                        </div>
+                        <p class="warning">A 10° downhill can increase stopping distance by 50% or more!</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="slope-slider-container">
+                    <div class="slope-visual">
+                        <div class="slope-indicator" id="slope-indicator">
+                            <div class="slope-car">🚗</div>
+                            <div class="slope-line"></div>
+                        </div>
+                    </div>
+                    <input type="range" id="slope-slider" min="-15" max="15" value="0" step="1" class="slope-slider">
+                    <div class="slope-labels">
+                        <span class="slope-label-left">-15° Downhill</span>
+                        <span class="slope-value" id="slope-value">0° Flat</span>
+                        <span class="slope-label-right">+15° Uphill</span>
+                    </div>
+                    <div class="slope-presets">
+                        <button class="slope-preset-btn" data-slope="-10">Steep Downhill</button>
+                        <button class="slope-preset-btn" data-slope="-5">Gentle Downhill</button>
+                        <button class="slope-preset-btn active" data-slope="0">Flat Road</button>
+                        <button class="slope-preset-btn" data-slope="5">Gentle Uphill</button>
+                        <button class="slope-preset-btn" data-slope="10">Steep Uphill</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brake Fade -->
+            <div class="selection-section">
+                <h2>Brake Condition <button class="info-btn" data-tooltip="brakefade">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-brakefade">
+                    <div class="tooltip-content">
+                        <h4>Brake Fade</h4>
+                        <p>Repeated or sustained hard braking generates heat in the brake system, causing "brake fade" - a significant loss of braking power.</p>
+                        <ul>
+                            <li><strong>Cold/Normal (0-2):</strong> Full braking power available</li>
+                            <li><strong>Warm (3-4):</strong> Slight reduction after spirited driving</li>
+                            <li><strong>Hot (5-6):</strong> Noticeable fade - allow cooling time</li>
+                            <li><strong>Very Hot (7-8):</strong> Significant fade - dangerous</li>
+                            <li><strong>Severe Fade (9-10):</strong> Brake failure risk!</li>
+                        </ul>
+                        <div class="fade-causes">
+                            <h5>Common Causes:</h5>
+                            <ul>
+                                <li>Long mountain descents (holding brakes)</li>
+                                <li>Repeated emergency stops</li>
+                                <li>Track/spirited driving</li>
+                                <li>Towing heavy loads downhill</li>
+                            </ul>
+                        </div>
+                        <p class="tip">Use engine braking on long descents. If brakes feel spongy, pull over and let them cool!</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="brake-fade-container">
+                    <input type="range" id="brake-fade-slider" min="0" max="10" value="0" step="1" class="brake-fade-slider">
+                    <div class="brake-fade-labels">
+                        <span>Cold</span>
+                        <span class="brake-fade-value" id="brake-fade-value">0 - Normal</span>
+                        <span>Severe Fade</span>
+                    </div>
+                    <div class="brake-fade-visual">
+                        <div class="fade-indicator" id="fade-indicator">
+                            <div class="fade-bar"></div>
+                            <div class="fade-temp">🌡️</div>
+                        </div>
+                    </div>
+                    <div class="brake-fade-presets">
+                        <button class="fade-preset-btn active" data-fade="0">Cold Brakes</button>
+                        <button class="fade-preset-btn" data-fade="3">Warm</button>
+                        <button class="fade-preset-btn" data-fade="5">Hot</button>
+                        <button class="fade-preset-btn" data-fade="8">Fading!</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tyre Compound Type -->
+            <div class="selection-section">
+                <h2>Tyre Compound Quality <button class="info-btn" data-tooltip="compound">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-compound">
+                    <div class="tooltip-content">
+                        <h4>Tyre Compound Types</h4>
+                        <p>Beyond the EU wet grip grade, tyre compounds vary significantly based on intended use and price point.</p>
+                        <ul>
+                            <li><strong>Economy:</strong> Harder compound, longer life, ~12% less grip. Budget brands.</li>
+                            <li><strong>Touring:</strong> Standard compound, balanced performance. Most OEM tyres.</li>
+                            <li><strong>Performance:</strong> Softer compound, ~4-6% better grip, faster wear. Sport tyres.</li>
+                            <li><strong>UHP (Ultra High Performance):</strong> Maximum grip, ~12% better dry grip. Premium sport.</li>
+                            <li><strong>Track/Semi-Slick:</strong> Extreme dry grip (+25%), but POOR in wet (-15%)!</li>
+                        </ul>
+                        <div class="compound-note">
+                            <h5>NZ Market Context:</h5>
+                            <p>Most tyres sold in NZ are Touring or Economy compounds. Performance/UHP are typically fitted to sports cars or as upgrades.</p>
+                        </div>
+                        <p class="warning">Track tyres are dangerous on wet roads - designed for dry circuits only!</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="compound-selector">
+                    <button class="compound-btn" data-compound="economy">
+                        <span class="compound-icon">💰</span>
+                        <span class="compound-name">Economy</span>
+                        <span class="compound-desc">Budget, longer life</span>
+                    </button>
+                    <button class="compound-btn active" data-compound="touring">
+                        <span class="compound-icon">🚗</span>
+                        <span class="compound-name">Touring</span>
+                        <span class="compound-desc">Standard OEM</span>
+                    </button>
+                    <button class="compound-btn" data-compound="performance">
+                        <span class="compound-icon">🏎️</span>
+                        <span class="compound-name">Performance</span>
+                        <span class="compound-desc">Sport grip</span>
+                    </button>
+                    <button class="compound-btn" data-compound="uhp">
+                        <span class="compound-icon">⚡</span>
+                        <span class="compound-name">UHP</span>
+                        <span class="compound-desc">Maximum grip</span>
+                    </button>
+                    <button class="compound-btn" data-compound="track">
+                        <span class="compound-icon">🏁</span>
+                        <span class="compound-name">Track</span>
+                        <span class="compound-desc">Dry only!</span>
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Configuration Info Panel -->
+            <div class="config-info-panel" id="config-info">
+                <!-- Filled by JS -->
+            </div>
+
+            <button id="start-btn" class="start-button" aria-label="Start the braking test">
+                <span>START TEST</span>
+            </button>
+
+            <div class="branding">
+                <p>Powered by <strong>Tyre Dispatch NZ</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <!-- HUD -->
+        <div class="game-hud">
+            <div class="hud-left">
+                <button class="hud-back-btn" id="hud-back-btn" aria-label="Return to main menu">
+                    <span class="back-arrow">←</span>
+                    <span class="back-text">MENU</span>
+                </button>
+                <div class="hud-item">
+                    <span class="hud-label">GRADE</span>
+                    <span class="hud-value" id="hud-grade">C</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">WEATHER</span>
+                    <span class="hud-value" id="hud-test-type">RAIN</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="speedometer">
+                    <span class="speed-value" id="speed-display">0</span>
+                    <span class="speed-unit">KM/H</span>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="hud-item">
+                    <span class="hud-label">DISTANCE</span>
+                    <span class="hud-value" id="hud-distance">0 m</span>
+                </div>
+                <div class="hud-item hud-braking">
+                    <span class="hud-label">BRAKING</span>
+                    <span class="hud-value hud-brake-value" id="hud-braking">0 m</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <div class="game-area">
+            <canvas id="game-canvas"></canvas>
+
+            <!-- Control Buttons - Side by Side -->
+            <div class="game-controls">
+                <button class="control-button accelerate-button" id="accel-btn" aria-label="Hold to accelerate vehicle - or press spacebar">
+                    <span class="control-icon">🚀</span>
+                    <span class="control-text">ACCELERATE</span>
+                    <span class="control-hint">Hold SPACE</span>
+                </button>
+                <button class="control-button brake-button" id="brake-btn" aria-label="Click to apply brakes and stop vehicle">
+                    <span class="control-icon">🛑</span>
+                    <span class="control-text">BRAKE</span>
+                    <span class="control-hint">Click to stop</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel hidden" id="results-panel">
+            <h2>TEST RESULTS</h2>
+
+            <!-- Main Result Summary -->
+            <div class="result-main">
+                <div class="your-result">
+                    <span class="result-label">Your stopping distance (Grade <span id="result-grade">C</span>)</span>
+                    <span class="result-value" id="result-distance">0 m</span>
+                </div>
+                <div class="result-speed">
+                    <span class="result-label">Speed at braking</span>
+                    <span class="result-value" id="result-speed">0 km/h</span>
+                </div>
+            </div>
+
+            <!-- Test Configuration Summary -->
+            <div class="config-summary-section">
+                <h3>Your Configuration</h3>
+                <div class="config-summary-grid" id="config-summary">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Range Display -->
+            <div class="range-display-section">
+                <h3>Your Result in Context</h3>
+                <div class="range-bar-container">
+                    <div class="range-bar">
+                        <div class="range-best" id="range-best-marker">
+                            <span class="range-label">Best</span>
+                            <span class="range-value" id="range-best-value">0m</span>
+                        </div>
+                        <div class="range-you" id="range-you-marker">
+                            <span class="range-indicator">YOU</span>
+                        </div>
+                        <div class="range-worst" id="range-worst-marker">
+                            <span class="range-label">Worst</span>
+                            <span class="range-value" id="range-worst-value">0m</span>
+                        </div>
+                    </div>
+                    <div class="range-scale">
+                        <div class="range-fill" id="range-fill"></div>
+                        <div class="range-you-position" id="range-you-position"></div>
+                    </div>
+                </div>
+                <p class="range-summary" id="range-summary"></p>
+            </div>
+
+            <!-- Speed Graph -->
+            <div class="speed-graph-section">
+                <h3>Speed Over Time</h3>
+                <div class="graph-container">
+                    <canvas id="speed-graph"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Stats Breakdown -->
+            <div class="detailed-stats-section">
+                <h3>Detailed Breakdown</h3>
+                <div id="detailed-stats">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Physics Factor Breakdown -->
+            <div class="factor-breakdown-section">
+                <div id="factor-breakdown">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Why This Result? Drawer -->
+            <div class="why-drawer-section">
+                <button class="why-drawer-toggle" id="why-toggle">
+                    <span>Why this result?</span>
+                    <span class="why-arrow">▼</span>
+                </button>
+                <div class="why-drawer-content hidden" id="why-content">
+                    <div id="why-breakdown">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grade Comparison -->
+            <div class="comparison-section">
+                <h3>Grade Comparison</h3>
+                <div class="grade-comparison" id="grade-comparison">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Insight Box -->
+            <div class="insight-box" id="insight-box">
+                <!-- Filled by JS -->
+            </div>
+
+            <div class="results-buttons">
+                <button class="btn-retry" id="retry-btn" aria-label="Retry test with same configuration">TRY AGAIN</button>
+                <button class="btn-menu" id="menu-btn" aria-label="Return to main menu to change configuration">CHANGE CONFIG</button>
+                <button class="btn-share" id="share-btn" aria-label="Share your test results">SHARE RESULTS</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="share-modal hidden">
+        <div class="share-modal-content">
+            <button class="share-close" id="share-close">&times;</button>
+            <h3>Share Your Results</h3>
+            <p class="share-summary" id="share-summary"></p>
+            <div class="share-link-container">
+                <input type="text" id="share-link" readonly>
+                <button class="btn-copy" id="copy-link-btn">Copy</button>
+            </div>
+            <div class="share-buttons">
+                <button class="share-social share-twitter" id="share-twitter">Twitter/X</button>
+                <button class="share-social share-facebook" id="share-facebook">Facebook</button>
+                <button class="share-social share-linkedin" id="share-linkedin">LinkedIn</button>
+            </div>
+            <p class="share-copied hidden" id="share-copied">Link copied to clipboard!</p>
+        </div>
+    </div>
+
+    <!-- Creator Credit Footer -->
+    <footer class="creator-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-logo">TYRE DISPATCH</span>
+                <span class="footer-divider">|</span>
+                <span class="footer-credit">Created by Taylor Houghton</span>
+            </div>
+            <div class="footer-info">
+                <span class="footer-physics">Physics Engine v3.4.3 | 501/501 Real-World Tests Validated</span>
+                <span class="footer-copyright" id="footer-copyright"></span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load physics engine first, then game -->
+    <script src="js/physics.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
