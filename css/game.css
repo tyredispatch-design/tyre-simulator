@@ -60,6 +60,32 @@ body {
     width: 100%;
 }
 
+/* Brand Header */
+.brand-header {
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 12px;
+}
+
+.brand-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+}
+
+.brand-tagline {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    letter-spacing: 1px;
+}
+
 .logo-section {
     text-align: center;
     margin-bottom: 2rem;
@@ -76,6 +102,43 @@ body {
 .subtitle {
     color: var(--text-muted);
     font-size: 1rem;
+}
+
+.creator-badge {
+    font-size: 0.8rem;
+    color: var(--secondary);
+    margin-top: 0.5rem;
+    opacity: 0.9;
+}
+
+.research-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%);
+    border: 2px solid var(--secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.research-btn:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4) 0%, rgba(34, 197, 94, 0.4) 100%);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.research-btn:active {
+    transform: translateY(0);
 }
 
 /* =====================================================
@@ -4403,5 +4466,834 @@ body {
     .footer-physics {
         font-size: 0.65rem;
         text-align: center;
+    }
+}
+
+/* =====================================================
+   FOOTER ENHANCEMENTS
+   ===================================================== */
+
+.footer-tagline {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.footer-creator {
+    margin: 0.5rem 0;
+}
+
+.footer-credit {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.footer-credit strong {
+    color: var(--primary);
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.footer-link {
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+/* =====================================================
+   TECHNICAL DOCUMENTATION SECTION
+   ===================================================== */
+
+.documentation-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--dark);
+    z-index: 2000;
+    overflow-y: auto;
+    padding: 2rem;
+}
+
+.documentation-section.hidden {
+    display: none;
+}
+
+.doc-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.doc-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--primary);
+    position: relative;
+}
+
+.doc-header h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.75rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.doc-header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.doc-close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.doc-close-btn:hover {
+    background: var(--danger);
+    border-color: var(--danger);
+}
+
+.doc-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.doc-card h3 {
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.doc-card p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.doc-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-box {
+    background: var(--dark-surface);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.stat-value {
+    display: block;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+.formula-box {
+    background: var(--dark-surface);
+    border: 1px solid var(--secondary);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.formula-box code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 1.1rem;
+    color: var(--secondary);
+}
+
+.formula-legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.formula-legend li {
+    padding: 0.35rem 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.formula-legend li strong {
+    color: var(--text);
+    font-family: monospace;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.data-table th {
+    background: var(--dark-surface);
+    color: var(--text);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.data-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.data-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.grade-a-row td:first-child { color: var(--grade-a); }
+.grade-b-row td:first-child { color: var(--grade-b); }
+.grade-c-row td:first-child { color: var(--grade-c); }
+.grade-d-row td:first-child { color: var(--grade-d); }
+.grade-e-row td:first-child { color: var(--grade-e); }
+
+.source-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+.note-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid var(--secondary);
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+}
+
+.validation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.validation-list li {
+    padding: 0.5rem 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.reference-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.reference-list li {
+    padding: 0.5rem 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.reference-list li:last-child {
+    border-bottom: none;
+}
+
+.reference-list li strong {
+    color: var(--text);
+}
+
+.disclaimer-card {
+    border-color: var(--warning);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.disclaimer-card h3 {
+    color: var(--warning);
+}
+
+.disclaimer-card ul {
+    list-style: disc;
+    margin-left: 1.5rem;
+    color: var(--text-muted);
+}
+
+.disclaimer-card li {
+    padding: 0.25rem 0;
+}
+
+.doc-footer {
+    text-align: center;
+    padding: 2rem 0 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+}
+
+.doc-footer p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+/* =====================================================
+   ENHANCED SCIENTIFIC DOCUMENTATION STYLES
+   ===================================================== */
+
+.doc-subtitle {
+    font-size: 1rem;
+    color: var(--secondary);
+    font-weight: 500;
+}
+
+/* Research Banner */
+.research-banner {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border: 2px solid var(--primary);
+}
+
+.research-banner h3 {
+    border-bottom: none;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.banner-content {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.banner-content p {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.doc-stats {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.stat-box.highlight {
+    border-color: var(--primary);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.stat-box.highlight .stat-value {
+    font-size: 1.8rem;
+}
+
+/* Methodology Grid */
+.methodology-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.method-item {
+    display: flex;
+    gap: 1rem;
+    background: var(--dark-surface);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.method-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    color: var(--dark);
+    font-weight: 700;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.method-content h4 {
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+}
+
+.method-content p {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Formula Sections */
+.formula-section {
+    background: var(--dark-surface);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid var(--border);
+}
+
+.formula-section h4 {
+    color: var(--secondary);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+.formula-box.main-formula {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(34, 197, 94, 0.15) 100%);
+    border: 2px solid var(--secondary);
+}
+
+.formula-box.main-formula code {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.formula-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.legend-item .var {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--secondary);
+    background: var(--dark-card);
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.formula-note {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+}
+
+/* Coefficient Table */
+.coefficient-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+}
+
+.coefficient-table th {
+    background: var(--dark-card);
+    color: var(--text);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.6rem;
+    border-bottom: 2px solid var(--primary);
+}
+
+.coefficient-table td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.coefficient-table code {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--secondary);
+    font-size: 0.75rem;
+}
+
+/* Scientific Data Tables */
+.data-table.scientific {
+    font-size: 0.8rem;
+}
+
+.data-table.scientific th {
+    background: linear-gradient(135deg, var(--dark-surface) 0%, var(--dark-card) 100%);
+    color: var(--secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table.scientific td code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--secondary);
+}
+
+/* Row highlighting */
+.warning-row {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.warning-row td {
+    color: var(--warning);
+}
+
+.danger-row {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.danger-row td {
+    color: var(--danger);
+}
+
+.optimal-row {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.optimal-row td {
+    color: var(--primary);
+}
+
+/* Chart Container */
+.chart-container {
+    background: var(--dark-surface);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+    border: 1px solid var(--border);
+}
+
+.chart-container h4 {
+    color: var(--text);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.chart-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+    margin-top: 0.75rem;
+}
+
+/* Bar Chart */
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.chart-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chart-label {
+    width: 70px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.chart-bar {
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark);
+    transition: width 0.3s ease;
+}
+
+.chart-bar.grade-a { background: linear-gradient(90deg, var(--grade-a), #16a34a); }
+.chart-bar.grade-b { background: linear-gradient(90deg, var(--grade-b), #65a30d); }
+.chart-bar.grade-c { background: linear-gradient(90deg, var(--grade-c), #eab308); }
+.chart-bar.grade-d { background: linear-gradient(90deg, var(--grade-d), #ea580c); }
+.chart-bar.grade-e { background: linear-gradient(90deg, var(--grade-e), #dc2626); }
+
+/* Line Chart Visual */
+.line-chart-visual {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+    height: 120px;
+}
+
+.chart-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: right;
+    width: 40px;
+}
+
+.chart-area {
+    flex: 1;
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+.curve-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-x-axis {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0.5rem 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* Note Box Scientific */
+.note-box.scientific {
+    background: rgba(59, 130, 246, 0.08);
+    border-left: 4px solid var(--secondary);
+    border-radius: 0 6px 6px 0;
+}
+
+/* Validation Summary */
+.validation-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.validation-stat {
+    text-align: center;
+}
+
+.big-number {
+    display: block;
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.stat-desc {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+}
+
+/* Validation Table */
+.validation-table th {
+    font-size: 0.7rem;
+}
+
+.validation-table td {
+    font-size: 0.8rem;
+}
+
+.validation-table .pass {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.validation-table tfoot .total-row {
+    background: var(--dark-surface);
+}
+
+.validation-table tfoot td {
+    border-top: 2px solid var(--primary);
+    font-weight: 600;
+}
+
+/* Source Categories */
+.source-category {
+    margin-bottom: 1.5rem;
+}
+
+.source-category h4 {
+    color: var(--secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.reference-list.detailed li {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 0;
+}
+
+.reference-list.detailed li strong {
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.ref-detail {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    opacity: 0.9;
+}
+
+/* Limitation List */
+.limitation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0;
+}
+
+.limitation-list li {
+    position: relative;
+    padding: 0.35rem 0 0.35rem 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.limitation-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0.5rem;
+    color: var(--warning);
+}
+
+.disclaimer-warning {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--danger);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+}
+
+/* Mobile responsive for documentation */
+@media (max-width: 768px) {
+    .documentation-section {
+        padding: 1rem;
+    }
+
+    .doc-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .doc-close-btn {
+        position: relative;
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .doc-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-box.highlight .stat-value {
+        font-size: 1.4rem;
+    }
+
+    .methodology-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .validation-summary {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .big-number {
+        font-size: 2rem;
+    }
+
+    .formula-legend {
+        grid-template-columns: 1fr;
+    }
+
+    .data-table {
+        font-size: 0.7rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.4rem;
+    }
+
+    .chart-label {
+        width: 55px;
+        font-size: 0.7rem;
+    }
+
+    .chart-bar {
+        font-size: 0.65rem;
+        padding-right: 0.5rem;
+    }
+
+    .line-chart-visual {
+        height: 100px;
+    }
+}
+
+@media (max-width: 500px) {
+    .footer-links {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer-links .footer-divider {
+        display: none;
     }
 }
