@@ -3664,8 +3664,8 @@ function openShareModal() {
         `;
     }
 
-    // Generate the share link (just the current page URL for now since this is local)
-    const baseUrl = window.location.href.split('?')[0];
+    // Generate the share link - use the Shopify page URL
+    const baseUrl = 'https://www.tyredispatch.co.nz/pages/breaking-simulator';
     const shareUrl = `${baseUrl}?r=${data.configParam}`;
 
     if (shareLink) {
@@ -3772,6 +3772,19 @@ function shareToLinkedIn() {
         '_blank',
         'width=550,height=420'
     );
+}
+
+// =====================================================
+// DOCUMENTATION TOGGLE
+// =====================================================
+
+function toggleDocumentation() {
+    const docSection = document.getElementById('documentation-section');
+    if (docSection) {
+        docSection.classList.toggle('hidden');
+        // Prevent body scroll when documentation is open
+        document.body.style.overflow = docSection.classList.contains('hidden') ? '' : 'hidden';
+    }
 }
 
 // =====================================================
