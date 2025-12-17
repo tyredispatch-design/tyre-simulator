@@ -1184,6 +1184,145 @@ body {
     }
 }
 
+/* Mobile responsive for GAME SCREEN - fit everything on one screen */
+@media (max-width: 768px) {
+    #game-screen {
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile browsers */
+        overflow: hidden;
+    }
+
+    .game-area {
+        min-height: 250px;
+        height: calc(100vh - 140px); /* Account for HUD + controls */
+        height: calc(100dvh - 140px);
+        max-height: none;
+        flex: 1;
+    }
+
+    .game-controls {
+        bottom: 1rem;
+    }
+}
+
+@media (max-width: 500px) {
+    #game-screen {
+        height: 100vh;
+        height: 100dvh;
+    }
+
+    .game-hud {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .hud-left, .hud-right {
+        gap: 0.5rem;
+    }
+
+    .speedometer {
+        padding: 0.5rem 1rem;
+    }
+
+    .speed-value {
+        font-size: 1.5rem;
+    }
+
+    .speed-unit {
+        font-size: 0.6rem;
+    }
+
+    .game-area {
+        min-height: 200px;
+        height: calc(100vh - 120px);
+        height: calc(100dvh - 120px);
+        max-height: none;
+    }
+
+    .game-controls {
+        bottom: 0.75rem;
+        gap: 0.75rem;
+    }
+
+    .control-button {
+        padding: 0.75rem 1.25rem;
+        min-width: 100px;
+        border-radius: 12px;
+    }
+
+    .control-icon {
+        font-size: 1.25rem;
+    }
+
+    .control-text {
+        font-size: 0.75rem;
+    }
+
+    .control-hint {
+        display: none; /* Hide keyboard hints on mobile */
+    }
+}
+
+/* Extra small phones (iPhone SE, etc.) */
+@media (max-width: 375px) {
+    .game-hud {
+        padding: 0.4rem 0.5rem;
+    }
+
+    .speedometer {
+        padding: 0.4rem 0.75rem;
+    }
+
+    .speed-value {
+        font-size: 1.25rem;
+    }
+
+    .game-area {
+        min-height: 180px;
+        height: calc(100vh - 100px);
+        height: calc(100dvh - 100px);
+    }
+
+    .control-button {
+        padding: 0.6rem 1rem;
+        min-width: 85px;
+    }
+
+    .back-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* Landscape mobile - ensure everything fits */
+@media (max-height: 500px) and (orientation: landscape) {
+    .game-hud {
+        padding: 0.25rem 1rem;
+    }
+
+    .speedometer {
+        padding: 0.25rem 0.75rem;
+    }
+
+    .speed-value {
+        font-size: 1.25rem;
+    }
+
+    .game-area {
+        min-height: 150px;
+        height: calc(100vh - 80px);
+        height: calc(100dvh - 80px);
+        max-height: none;
+    }
+
+    .game-controls {
+        bottom: 0.5rem;
+    }
+
+    .control-button {
+        padding: 0.5rem 1rem;
+    }
+}
+
 /* Hidden */
 .hidden {
     display: none !important;
@@ -3417,6 +3556,186 @@ body {
 }
 
 /* =====================================================
+   TERRAIN CATEGORY SELECTOR
+   ===================================================== */
+
+.terrain-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.terrain-btn {
+    background: var(--dark-surface);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 0.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.terrain-btn:hover {
+    border-color: var(--secondary);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.terrain-btn.active {
+    border-color: var(--secondary);
+    background: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Special styling for off-road terrain types */
+.terrain-btn[data-terrain="AT"].active,
+.terrain-btn[data-terrain="MT"].active,
+.terrain-btn[data-terrain="RT"].active {
+    border-color: var(--warning);
+    background: rgba(245, 158, 11, 0.2);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+}
+
+/* Special styling for performance terrain types */
+.terrain-btn[data-terrain="HP"].active,
+.terrain-btn[data-terrain="UHP"].active {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.2);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.terrain-icon {
+    font-size: 1.5rem;
+}
+
+.terrain-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.terrain-btn.active .terrain-label {
+    color: var(--text);
+}
+
+/* =====================================================
+   PATTERN DIRECTION SELECTOR
+   ===================================================== */
+
+.pattern-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.pattern-btn {
+    background: var(--dark-surface);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 0.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.pattern-btn:hover {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.1);
+}
+
+.pattern-btn.active {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.2);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+/* Special styling for directional patterns (water evacuation) */
+.pattern-btn[data-pattern="DIRECTIONAL"].active {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Special styling for performance asymmetrical patterns */
+.pattern-btn[data-pattern="ASYMMETRICAL_DIRECTIONAL"].active {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.2);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+}
+
+.pattern-icon {
+    font-size: 1.5rem;
+}
+
+.pattern-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.pattern-btn.active .pattern-label {
+    color: var(--text);
+}
+
+/* Responsive adjustments for terrain and pattern selectors */
+@media (max-width: 768px) {
+    .terrain-selector-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.35rem;
+    }
+
+    .pattern-selector {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.35rem;
+    }
+
+    .terrain-btn,
+    .pattern-btn {
+        padding: 0.5rem 0.15rem;
+    }
+
+    .terrain-icon,
+    .pattern-icon {
+        font-size: 1.25rem;
+    }
+
+    .terrain-label,
+    .pattern-label {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .terrain-selector-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .pattern-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .terrain-btn,
+    .pattern-btn {
+        padding: 0.4rem 0.1rem;
+    }
+
+    .terrain-icon,
+    .pattern-icon {
+        font-size: 1rem;
+    }
+
+    .terrain-label,
+    .pattern-label {
+        font-size: 0.55rem;
+    }
+}
+
+/* =====================================================
    WEIGHT INPUT STYLES
    ===================================================== */
 
@@ -4352,6 +4671,402 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* =====================================================
+   SAVED RUNS / COMPARE FEATURE
+   ===================================================== */
+
+.saved-runs-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.saved-runs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.saved-runs-header h4 {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.btn-clear-runs {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-clear-runs:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.saved-runs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.saved-run {
+    background: var(--dark-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.saved-run.current-run {
+    border-color: var(--primary);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.run-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 150px;
+}
+
+.run-distance {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.run-speed {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.current-badge {
+    background: var(--primary);
+    color: var(--dark);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.run-details {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.run-details span {
+    background: var(--dark-card);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.btn-delete-run {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.saved-run:hover .btn-delete-run {
+    opacity: 1;
+}
+
+.btn-delete-run:hover {
+    color: #ef4444;
+}
+
+.runs-comparison {
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background: var(--dark-surface);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.comparison-good {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.comparison-info {
+    color: var(--text-muted);
+}
+
+.no-runs {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* =====================================================
+   CHALLENGE MODE STYLES
+   ===================================================== */
+
+.challenge-banner {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.challenge-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.challenge-banner-icon {
+    font-size: 1.5rem;
+}
+
+.challenge-banner-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.challenge-banner-text strong {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.challenge-banner-text span {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.challenge-banner-close {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.challenge-banner-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Challenge result banner in results panel */
+.challenge-result-banner {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    text-align: center;
+    animation: bounceIn 0.5s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.challenge-result-banner.won {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
+    border: 2px solid var(--primary);
+}
+
+.challenge-result-banner.lost {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+    border: 2px solid #ef4444;
+}
+
+.challenge-result-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.challenge-result-icon {
+    font-size: 2rem;
+}
+
+.challenge-result-message {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.challenge-result-banner.won .challenge-result-message {
+    color: var(--primary);
+}
+
+.challenge-result-banner.lost .challenge-result-message {
+    color: #ef4444;
+}
+
+/* Challenge modal styles */
+.challenge-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--dark-surface);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.challenge-icon {
+    font-size: 2.5rem;
+}
+
+.challenge-stats {
+    display: flex;
+    flex-direction: column;
+}
+
+.challenge-distance {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.challenge-details {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.challenge-prompt {
+    text-align: center;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.challenge-target {
+    text-align: center;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid #f59e0b;
+    color: #f59e0b;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Mobile responsive for saved runs and challenge */
+@media (max-width: 768px) {
+    .saved-runs-section {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .saved-run {
+        padding: 0.5rem;
+    }
+
+    .run-distance {
+        font-size: 1rem;
+    }
+
+    .run-details span {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.35rem;
+    }
+
+    .challenge-banner {
+        padding: 0.5rem;
+    }
+
+    .challenge-banner-text strong {
+        font-size: 0.75rem;
+    }
+
+    .challenge-banner-text span {
+        font-size: 0.9rem;
+    }
+
+    .challenge-result {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .challenge-distance {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .run-main {
+        min-width: 100%;
+    }
+
+    .run-details {
+        width: 100%;
+    }
+
+    .btn-delete-run {
+        opacity: 1;
     }
 }
 
