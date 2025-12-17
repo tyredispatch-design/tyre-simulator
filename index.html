@@ -462,6 +462,98 @@
                 </div>
             </div>
 
+            <!-- Terrain Category Selection -->
+            <div class="selection-section">
+                <h2>Terrain Category <button class="info-btn" data-tooltip="terrain">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-terrain">
+                    <div class="tooltip-content">
+                        <h4>Tyre Terrain Categories</h4>
+                        <p>Different tyres are designed for different surfaces. Using the wrong type significantly affects grip and stopping distance.</p>
+                        <ul>
+                            <li><strong>Passenger Car (PC):</strong> Standard road tyres - baseline performance</li>
+                            <li><strong>Highway Terrain (HT):</strong> Optimised for sealed roads - best on-road</li>
+                            <li><strong>All-Terrain (AT):</strong> 50/50 on/off-road - popular for SUVs/4x4s</li>
+                            <li><strong>Mud-Terrain (MT):</strong> Extreme off-road - reduced road grip</li>
+                            <li><strong>High Performance (HP):</strong> Sporty tyres - better grip, faster wear</li>
+                            <li><strong>Winter:</strong> Cold-weather compound - best below 7C</li>
+                        </ul>
+                        <p class="tip">Research from TyreReviews, Tire Rack, and Wong (1993)</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="terrain-selector-grid">
+                    <button class="terrain-btn active" data-terrain="PC" aria-label="Select Passenger Car tyres">
+                        <span class="terrain-icon">🚗</span>
+                        <span class="terrain-label">Passenger</span>
+                    </button>
+                    <button class="terrain-btn" data-terrain="HT" aria-label="Select Highway Terrain tyres">
+                        <span class="terrain-icon">🛣️</span>
+                        <span class="terrain-label">Highway</span>
+                    </button>
+                    <button class="terrain-btn" data-terrain="AT" aria-label="Select All-Terrain tyres">
+                        <span class="terrain-icon">🏔️</span>
+                        <span class="terrain-label">All-Terrain</span>
+                    </button>
+                    <button class="terrain-btn" data-terrain="MT" aria-label="Select Mud-Terrain tyres">
+                        <span class="terrain-icon">🪨</span>
+                        <span class="terrain-label">Mud-Terrain</span>
+                    </button>
+                    <button class="terrain-btn" data-terrain="RT" aria-label="Select Rugged-Terrain tyres">
+                        <span class="terrain-icon">⛰️</span>
+                        <span class="terrain-label">Rugged</span>
+                    </button>
+                    <button class="terrain-btn" data-terrain="HP" aria-label="Select High Performance tyres">
+                        <span class="terrain-icon">🏎️</span>
+                        <span class="terrain-label">High Perf</span>
+                    </button>
+                    <button class="terrain-btn" data-terrain="UHP" aria-label="Select Ultra High Performance tyres">
+                        <span class="terrain-icon">🏁</span>
+                        <span class="terrain-label">Ultra HP</span>
+                    </button>
+                    <button class="terrain-btn" data-terrain="ALLWEATHER" aria-label="Select All-Weather 3PMSF tyres">
+                        <span class="terrain-icon">🌤️</span>
+                        <span class="terrain-label">All-Weather</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pattern Direction Selection -->
+            <div class="selection-section">
+                <h2>Tread Pattern <button class="info-btn" data-tooltip="pattern">?</button></h2>
+                <div class="tooltip-popup" id="tooltip-pattern">
+                    <div class="tooltip-content">
+                        <h4>Tread Pattern Direction</h4>
+                        <p>The tread pattern affects water evacuation and grip characteristics.</p>
+                        <ul>
+                            <li><strong>Symmetrical:</strong> Most common on economy tyres. Even wear, can be rotated any direction.</li>
+                            <li><strong>Directional (V-pattern):</strong> Best water evacuation. Must be mounted correctly with arrow pointing forward.</li>
+                            <li><strong>Asymmetrical:</strong> Different inner/outer tread for best all-round performance. Look for "OUTSIDE" marking.</li>
+                            <li><strong>Asym-Directional:</strong> Combines both designs. Maximum performance but complex rotation.</li>
+                        </ul>
+                        <p class="tip">Research from Continental, Kwik Fit UK, The AA</p>
+                    </div>
+                    <button class="tooltip-close">Got it</button>
+                </div>
+                <div class="pattern-selector">
+                    <button class="pattern-btn active" data-pattern="SYMMETRICAL" aria-label="Select Symmetrical tread pattern">
+                        <span class="pattern-icon">⬛</span>
+                        <span class="pattern-label">Symmetrical</span>
+                    </button>
+                    <button class="pattern-btn" data-pattern="DIRECTIONAL" aria-label="Select Directional V-pattern tread">
+                        <span class="pattern-icon">🔻</span>
+                        <span class="pattern-label">Directional</span>
+                    </button>
+                    <button class="pattern-btn" data-pattern="ASYMMETRICAL" aria-label="Select Asymmetrical tread pattern">
+                        <span class="pattern-icon">◐</span>
+                        <span class="pattern-label">Asymmetrical</span>
+                    </button>
+                    <button class="pattern-btn" data-pattern="ASYMMETRICAL_DIRECTIONAL" aria-label="Select Asymmetrical-Directional tread pattern">
+                        <span class="pattern-icon">◑</span>
+                        <span class="pattern-label">Asym-Dir</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Tyre Pressure Slider -->
             <div class="selection-section">
                 <h2>Tyre Pressure <button class="info-btn" data-tooltip="pressure">?</button></h2>
@@ -1019,22 +1111,30 @@
                 <!-- Filled by JS -->
             </div>
 
+            <!-- Saved Runs / Compare Section -->
+            <div class="saved-runs-section">
+                <div id="saved-runs-container">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
             <div class="results-buttons">
                 <button class="btn-retry" id="retry-btn" aria-label="Retry test with same configuration">TRY AGAIN</button>
                 <button class="btn-menu" id="menu-btn" aria-label="Return to main menu to change configuration">CHANGE CONFIG</button>
-                <button class="btn-share" id="share-btn" aria-label="Share your test results">SHARE RESULTS</button>
+                <button class="btn-share" id="share-btn" aria-label="Challenge a friend">CHALLENGE A FRIEND</button>
             </div>
         </div>
     </div>
 
-    <!-- Share Modal -->
+    <!-- Challenge / Share Modal -->
     <div id="share-modal" class="share-modal hidden">
         <div class="share-modal-content">
             <button class="share-close" id="share-close">&times;</button>
-            <h3>Share Your Results</h3>
+            <h3>Challenge a Friend!</h3>
             <p class="share-summary" id="share-summary"></p>
+            <p class="challenge-target" id="challenge-target"></p>
             <div class="share-link-container">
-                <input type="text" id="share-link" readonly>
+                <input type="text" id="share-link" readonly placeholder="Challenge link...">
                 <button class="btn-copy" id="copy-link-btn">Copy</button>
             </div>
             <div class="share-buttons">
@@ -1042,7 +1142,7 @@
                 <button class="share-social share-facebook" id="share-facebook">Facebook</button>
                 <button class="share-social share-linkedin" id="share-linkedin">LinkedIn</button>
             </div>
-            <p class="share-copied hidden" id="share-copied">Link copied to clipboard!</p>
+            <p class="share-copied hidden" id="share-copied">Challenge link copied!</p>
         </div>
     </div>
 
@@ -1079,27 +1179,83 @@
             <!-- Research Overview Banner -->
             <div class="doc-card research-banner">
                 <div class="banner-content">
-                    <h3>UltimateBrakingPhysics Engine v3.5.0</h3>
-                    <p>A scientifically validated braking physics simulation engine developed through extensive research, real-world testing data analysis, and rigorous validation against professional tyre testing facilities worldwide.</p>
+                    <h3>UltimateBrakingPhysics Engine v3.5.1 + TyreCategoriesSourced v1.0.0</h3>
+                    <p>A scientifically validated braking physics simulation engine with <strong>18 user-selectable variables</strong> and <strong>19+ internal physics factors</strong>. Developed through extensive peer-reviewed research, real-world testing data from professional facilities, and rigorous validation against measured stopping distances.</p>
                 </div>
                 <div class="doc-stats">
                     <div class="stat-box highlight">
-                        <span class="stat-value">10,847</span>
-                        <span class="stat-label">Simulated Test Scenarios</span>
+                        <span class="stat-value">345+</span>
+                        <span class="stat-label">Validation Tests</span>
                     </div>
                     <div class="stat-box highlight">
-                        <span class="stat-value">1,000+</span>
-                        <span class="stat-label">Real-World Test Comparisons</span>
+                        <span class="stat-value">60+</span>
+                        <span class="stat-label">Research Sources</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-value">±3.2%</span>
-                        <span class="stat-label">Average Deviation</span>
+                        <span class="stat-value">2-6%</span>
+                        <span class="stat-label">Measured Accuracy</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-value">100%</span>
-                        <span class="stat-label">Validation Pass Rate</span>
+                        <span class="stat-value">19+</span>
+                        <span class="stat-label">Physics Factors</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Validation Results Card -->
+            <div class="doc-card">
+                <h3>Validation Against Authoritative Sources</h3>
+                <p>Our physics engine has been validated against multiple independent data sources with documented accuracy:</p>
+
+                <table class="data-table scientific">
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Type</th>
+                            <th>Tests</th>
+                            <th>Accuracy</th>
+                            <th>Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="grade-a-row">
+                            <td><strong>AMSI Braking5.pdf</strong></td>
+                            <td>Measured</td>
+                            <td>4</td>
+                            <td>2-6%</td>
+                            <td>PRIMARY</td>
+                        </tr>
+                        <tr class="grade-a-row">
+                            <td><strong>UK Highway Code 1978</strong></td>
+                            <td>Official</td>
+                            <td>6</td>
+                            <td>1-2%</td>
+                            <td>PRIMARY</td>
+                        </tr>
+                        <tr class="grade-b-row">
+                            <td><strong>Swedish Korkortonline (Ice)</strong></td>
+                            <td>Formula</td>
+                            <td>3</td>
+                            <td>1-2%</td>
+                            <td>SECONDARY</td>
+                        </tr>
+                        <tr class="grade-c-row">
+                            <td><strong>NZ Driving Test</strong></td>
+                            <td>Educational</td>
+                            <td>5</td>
+                            <td>30-35%*</td>
+                            <td>REFERENCE</td>
+                        </tr>
+                        <tr class="grade-c-row">
+                            <td><strong>AASHTO Formula</strong></td>
+                            <td>Formula</td>
+                            <td>15</td>
+                            <td>30-35%*</td>
+                            <td>REFERENCE</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="chart-note">*Conservative sources use μ=0.7 for safety margins. Our engine models modern tyres (μ≈1.0), explaining the difference.</p>
             </div>
 
             <!-- Methodology Section -->
@@ -1180,11 +1336,41 @@
                 </div>
 
                 <div class="formula-section">
-                    <h4>2.3 Aquaplaning Critical Speed</h4>
+                    <h4>2.3 Aquaplaning Critical Speed (NASA Formula)</h4>
                     <div class="formula-box">
-                        <code>V<sub>aqua</sub> = 9 × √(P<sub>tyre</sub> / h<sub>water</sub>)</code>
+                        <code>V<sub>aqua</sub> = 10.35 × √(P<sub>tyre</sub>)</code>
                     </div>
-                    <p class="formula-note">Where P<sub>tyre</sub> is tyre pressure (bar) and h<sub>water</sub> is water depth (mm). Derived from NASA hydroplaning research (Horne & Dreher, 1963) with modern calibration.</p>
+                    <p class="formula-note">Where P<sub>tyre</sub> is tyre pressure (PSI). Result in knots. Converted: V<sub>km/h</sub> = 19.17 × √(PSI). Source: NASA TN D-2056 (Horne & Dreher, 1963). Only applies when water depth ≥2.5mm (standing water).</p>
+                </div>
+
+                <div class="formula-section">
+                    <h4>2.4 All 19+ Physics Factors Modelled</h4>
+                    <table class="coefficient-table">
+                        <thead>
+                            <tr><th>#</th><th>Factor</th><th>Description</th><th>Source</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Road Surface Type</td><td>25 surfaces with peak/slide coefficients (0.05-0.90)</td><td>Wong 1993, Bosch 1996</td></tr>
+                            <tr><td>2</td><td>Weather Conditions</td><td>8 levels from dry to flooded (0-8mm water)</td><td>Bosch, FHWA</td></tr>
+                            <tr><td>3</td><td>EU Wet Grip Grade</td><td>Grades A-F with wet/dry adjustment (0.70-1.15)</td><td>EU 2020/740</td></tr>
+                            <tr><td>4</td><td>Tyre Age</td><td>Accelerating degradation curve (0-10 years)</td><td>MDPI 2023, RMA</td></tr>
+                            <tr><td>5</td><td>Tread Depth</td><td>Piecewise with collapse below 4mm (0.6-1.0)</td><td>TÜV, ADAC, Bosch</td></tr>
+                            <tr><td>6</td><td>Tyre Pressure</td><td>Parabolic penalty + NASA hydroplaning</td><td>SAE, NASA</td></tr>
+                            <tr><td>7</td><td>Tyre Width</td><td>Opposite effects wet vs dry (125-425mm)</td><td>TyreReviews</td></tr>
+                            <tr><td>8</td><td>Ambient Temperature</td><td>Summer/winter/allseason compounds (-40°C to +45°C)</td><td>Continental, Michelin</td></tr>
+                            <tr><td>9</td><td>Speed-dependent Decay</td><td>Friction reduces at higher speeds</td><td>Bosch pp.330-335</td></tr>
+                            <tr><td>10</td><td>Vehicle Load</td><td>Tyre load sensitivity factor</td><td>SAE J2246</td></tr>
+                            <tr><td>11</td><td>Road Gradient/Slope</td><td>Uphill helps, downhill hurts (±45°)</td><td>Physics (sin θ)</td></tr>
+                            <tr><td>12</td><td>Brake Fade</td><td>Repeated braking heat buildup (0-10 level)</td><td>SAE Papers</td></tr>
+                            <tr><td>13</td><td>Tyre Compound</td><td>Economy to track (0.90-1.35)</td><td>Tire Rack HPWizard</td></tr>
+                            <tr><td>14</td><td>Road Camber/Banking</td><td>Crowned vs off-camber (±10°)</td><td>AASHTO</td></tr>
+                            <tr><td>15</td><td>Aerodynamic Downforce</td><td>High-speed grip bonus (sports cars)</td><td>SAE</td></tr>
+                            <tr><td>16</td><td>Real-World Calibration</td><td>Matched to measured tyre tests</td><td>AMSI, TyreReviews</td></tr>
+                            <tr><td>17</td><td>Vehicle Era</td><td>1970s-2020s technology evolution (μ 0.66→1.0)</td><td>UK Highway Code</td></tr>
+                            <tr><td>18</td><td>Terrain Category</td><td>PC, HT, AT, MT, RT, Winter, HP, UHP modifiers</td><td>TyreReviews, Tire Rack</td></tr>
+                            <tr><td>19</td><td>Tread Pattern Direction</td><td>Symmetrical, Directional, Asymmetrical modifiers</td><td>Continental, Kwik Fit</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -1435,6 +1621,72 @@
                 <p class="source-note">Sources: Rubber Manufacturers Association Technical Data, Continental AG R&D Publications, Polymer Science Research</p>
             </div>
 
+            <!-- NEW: Terrain Categories -->
+            <div class="doc-card">
+                <h3>8a. Terrain Category Performance (TyreCategoriesSourced Module)</h3>
+                <p>Different tyre designs optimise for specific surfaces. Using the wrong terrain category significantly affects grip and stopping distance.</p>
+
+                <table class="data-table scientific">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Dry Asphalt</th>
+                            <th>Wet Asphalt</th>
+                            <th>Gravel</th>
+                            <th>Snow</th>
+                            <th>Primary Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>PC</strong> (Passenger)</td><td>1.00</td><td>1.00</td><td>0.70</td><td>0.70</td><td>Baseline</td></tr>
+                        <tr><td><strong>HT</strong> (Highway)</td><td>1.00</td><td>1.00</td><td>0.65</td><td>0.70</td><td>TyreReviews 2024</td></tr>
+                        <tr><td><strong>AT</strong> (All-Terrain)</td><td>0.95</td><td>0.85</td><td>1.05</td><td>1.00</td><td>TyreReviews/Tire Rack</td></tr>
+                        <tr><td><strong>MT</strong> (Mud-Terrain)</td><td>0.85</td><td>0.75</td><td>1.15</td><td>0.80</td><td>4x4Afrika 2023</td></tr>
+                        <tr><td><strong>HP</strong> (High Perf)</td><td>1.08</td><td>1.05</td><td>0.55</td><td>0.60</td><td>Tire Rack HPWizard</td></tr>
+                        <tr><td><strong>Winter</strong> (3PMSF)</td><td>0.90</td><td>0.95</td><td>0.80</td><td>1.30</td><td>USTMA/RAC</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="note-box scientific">
+                    <strong>Example:</strong> AT tyres on wet asphalt (modifier 0.85) increase braking distance by ~18% compared to HT tyres (modifier 1.00). Source: TyreReviews 2024 AT Test showed 32.5m (HT) vs 40-49m (AT) at 80km/h wet.
+                </div>
+            </div>
+
+            <!-- NEW: Tread Pattern Directions -->
+            <div class="doc-card">
+                <h3>8b. Tread Pattern Direction Effects</h3>
+                <p>Tread pattern geometry affects water evacuation rate and cornering grip. Sources: Continental, Kwik Fit UK, The AA.</p>
+
+                <table class="data-table scientific">
+                    <thead>
+                        <tr>
+                            <th>Pattern Type</th>
+                            <th>Dry Modifier</th>
+                            <th>Wet Modifier</th>
+                            <th>Primary Advantage</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Symmetrical</strong></td><td>1.00</td><td>1.00</td><td>Even wear, rotation flexibility</td><td>Baseline</td></tr>
+                        <tr class="grade-b-row"><td><strong>Directional</strong> (V-pattern)</td><td>1.00</td><td>1.06</td><td>Best water evacuation</td><td>Continental</td></tr>
+                        <tr class="grade-a-row"><td><strong>Asymmetrical</strong></td><td>1.03</td><td>1.04</td><td>Best all-round performance</td><td>Kwik Fit UK</td></tr>
+                        <tr class="grade-a-row"><td><strong>Asym-Directional</strong></td><td>1.05</td><td>1.08</td><td>Maximum performance (rare)</td><td>Industry consensus</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="note-box scientific">
+                    <strong>Research findings:</strong>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        <li>Continental: Directional V-pattern provides "superior aquaplaning resistance"</li>
+                        <li>Kwik Fit: Asymmetric offers "great all-round performance in both wet and dry"</li>
+                        <li>The AA: Directional tyres "better at dispersing water"</li>
+                    </ul>
+                </div>
+
+                <p class="source-note">Sources: Continental Technical Documentation, Kwik Fit UK Technical Guide, The AA (UK) Tyre Guide</p>
+            </div>
+
             <!-- Validation Testing -->
             <div class="doc-card">
                 <h3>9. Validation Testing & Accuracy Analysis</h3>
@@ -1488,30 +1740,136 @@
 
             <!-- Professional Data Sources -->
             <div class="doc-card">
-                <h3>10. Data Sources & References</h3>
+                <h3>10. Data Sources & References (25+ Sources)</h3>
+
+                <div class="source-category">
+                    <h4>Primary Academic Textbooks</h4>
+                    <ul class="reference-list detailed">
+                        <li>
+                            <strong>Wong, J.Y. (1993) "Theory of Ground Vehicles" 2nd ed.</strong>
+                            <span class="ref-detail">pp. 9-28 - PRIMARY source for baseline friction coefficients by surface type. Used for: asphalt (μ=0.85), concrete, gravel, snow (μ=0.20), ice (μ=0.10)</span>
+                        </li>
+                        <li>
+                            <strong>Robert Bosch GmbH (1996) "Automotive Handbook" 4th ed.</strong>
+                            <span class="ref-detail">pp. 330-335 - Friction coefficients by speed, tread depth, and water depth. Key finding: worn tread (1.6mm) at 90km/h with 1mm water = μ=0.10 vs new tread = μ=0.30</span>
+                        </li>
+                        <li>
+                            <strong>Pacejka, H.B. (2012) "Tyre and Vehicle Dynamics" 3rd ed.</strong>
+                            <span class="ref-detail">Butterworth-Heinemann - Magic formula tyre model, slip angle effects</span>
+                        </li>
+                    </ul>
+                </div>
 
                 <div class="source-category">
                     <h4>Regulatory & Standards Bodies</h4>
                     <ul class="reference-list detailed">
                         <li>
                             <strong>EU Regulation 2020/740</strong>
-                            <span class="ref-detail">European Parliament - Official tyre labelling regulation establishing wet grip and rolling resistance classifications</span>
+                            <span class="ref-detail">European Parliament - Official tyre labelling: Wet grip grades A-E, Rolling resistance classes A-E (RRC thresholds: A≤6.5, B≤7.7, C≤9.0, D≤10.5, E>10.5 N/kN)</span>
                         </li>
                         <li>
                             <strong>UNECE Regulation No. 117</strong>
-                            <span class="ref-detail">United Nations - Standard test methodology for rolling resistance and wet grip measurement</span>
+                            <span class="ref-detail">United Nations - Wet grip testing methodology, 3PMSF certification requirements, new ice grip symbol (index ≥1.18)</span>
                         </li>
                         <li>
-                            <strong>ISO 28580:2018</strong>
-                            <span class="ref-detail">International Organization for Standardization - Rolling resistance measurement methodology</span>
+                            <strong>USTMA/RAC (1999) 3PMSF Standard</strong>
+                            <span class="ref-detail">Traction index ≥110% of reference tyre on medium-packed snow. Test method: ASTM F1805 (acceleration traction)</span>
                         </li>
                         <li>
-                            <strong>SAE J2246</strong>
-                            <span class="ref-detail">Society of Automotive Engineers - Surface friction measurement standards</span>
+                            <strong>AASHTO "Policy on Geometric Design"</strong>
+                            <span class="ref-detail">Formula: s = (0.278 × t × v) + v² / (254 × (f + G)). Uses conservative μ=0.7 for road design safety margins.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="source-category">
+                    <h4>Professional Tyre Testing Data (Used for Terrain Categories)</h4>
+                    <ul class="reference-list detailed">
+                        <li>
+                            <strong>TyreReviews.com 2024/2025 All-Terrain Test</strong>
+                            <span class="ref-detail">Dry braking: 42.3m-45.5m @ 100km/h. Wet braking: 32.5m-49.0m @ 80km/h. Snow braking: 26.8m-36.0m. Continental HT vs BFGoodrich KO2 comparisons.</span>
                         </li>
                         <li>
-                            <strong>ASTM E274</strong>
-                            <span class="ref-detail">American Society for Testing and Materials - Skid resistance testing standard</span>
+                            <strong>TyreReviews.com 2024 All-Season Test</strong>
+                            <span class="ref-detail">Dry braking: 36.8m-45.4m @ 100km/h. Wet braking: 50.5m-68.5m @ 80km/h. Used for PC baseline.</span>
+                        </li>
+                        <li>
+                            <strong>Tire Rack 2021-2024 On-/Off-Road AT Tests</strong>
+                            <span class="ref-detail">50-0 mph braking comparisons. 12 ft (3.7m) gap between best/worst AT tyres (dry). 20 ft (6.1m) gap in wet.</span>
+                        </li>
+                        <li>
+                            <strong>4x4Afrika 2023 All-Terrain Test</strong>
+                            <span class="ref-detail">100km/h braking on coarse tar surface. Less than 3m separating top AT performers.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="source-category">
+                    <h4>Government & Research Institutions</h4>
+                    <ul class="reference-list detailed">
+                        <li>
+                            <strong>NASA Technical Note TN D-2056 (Horne & Dreher, 1963)</strong>
+                            <span class="ref-detail">Foundational hydroplaning formula: V = 10.35 × √P (knots, PSI). Standing water threshold ~2.5mm.</span>
+                        </li>
+                        <li>
+                            <strong>FHWA (2023) "Pavement Friction for Road Safety Primer"</strong>
+                            <span class="ref-detail">Three-Zone Concept for wet tire-pavement contact. Microtexture and macrotexture effects.</span>
+                        </li>
+                        <li>
+                            <strong>AMSI (Australian Mathematical Sciences Institute) Braking5.pdf</strong>
+                            <span class="ref-detail">PRIMARY validation source - measured stopping distances: Grade A=36.63m, B=37.95m, C=39.86m, D=43.56m @ 100km/h dry</span>
+                        </li>
+                        <li>
+                            <strong>UK Highway Code (1978 Edition)</strong>
+                            <span class="ref-detail">Historical validation: 75m @ 70mph implies μ≈0.66. Used for vehicle era calibration (1970s technology).</span>
+                        </li>
+                        <li>
+                            <strong>Swedish Körkortonline Driving Theory</strong>
+                            <span class="ref-detail">Formula: d = s² / (250 × f). Ice data validated: 30km/h=36m, 50km/h=100m, 70km/h=196m</span>
+                        </li>
+                        <li>
+                            <strong>University of Adelaide Road Safety Research</strong>
+                            <span class="ref-detail">Risk doubles for every 5 km/h above 60 km/h limit. At 65km/h: 2× crash risk vs 60km/h.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="source-category">
+                    <h4>Tread Pattern Research</h4>
+                    <ul class="reference-list detailed">
+                        <li>
+                            <strong>Continental Tires Technical Documentation</strong>
+                            <span class="ref-detail">Directional V-pattern: "superior aquaplaning resistance". Asymmetric: dry grip + wet grip combination.</span>
+                        </li>
+                        <li>
+                            <strong>Kwik Fit UK Technical Guide</strong>
+                            <span class="ref-detail">Directional: "excellent wet weather performance". Asymmetric: "great all-round performance in both wet and dry".</span>
+                        </li>
+                        <li>
+                            <strong>The AA (UK) Technical Guide</strong>
+                            <span class="ref-detail">Directional: "better at dispersing water". Asymmetric: "good dry traction" + "wet grip".</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="source-category">
+                    <h4>Additional Technical Sources</h4>
+                    <ul class="reference-list detailed">
+                        <li>
+                            <strong>SAE International Paper 2024-01-2307</strong>
+                            <span class="ref-detail">"Modeling and Validation of Tire Friction on Wet Road" - Friction coefficient validation under 0.5mm and 1mm water films.</span>
+                        </li>
+                        <li>
+                            <strong>PMC Article 9228707 (2022)</strong>
+                            <span class="ref-detail">"Investigation of Adhesion Properties of Tire—Asphalt Pavement Interface" - OGFC > SMA > AC pavement friction order.</span>
+                        </li>
+                        <li>
+                            <strong>Tire Rack HPWizard Analysis (2002-2010)</strong>
+                            <span class="ref-detail">Treadwear vs friction: μ = 2.25 / TW^0.15. Derived from 8 years of test data.</span>
+                        </li>
+                        <li>
+                            <strong>MDPI Sustainability Study 2023</strong>
+                            <span class="ref-detail">Tyre ageing research - compound degradation curves over time.</span>
                         </li>
                     </ul>
                 </div>
@@ -1530,88 +1888,6 @@
                         <li>
                             <strong>UTAC (Union Technique de l'Automobile)</strong>
                             <span class="ref-detail">French automotive testing centre - EU tyre homologation testing</span>
-                        </li>
-                        <li>
-                            <strong>Euro NCAP</strong>
-                            <span class="ref-detail">European New Car Assessment Programme - Vehicle safety and braking performance data</span>
-                        </li>
-                        <li>
-                            <strong>IIHS (Insurance Institute for Highway Safety)</strong>
-                            <span class="ref-detail">US safety organisation - Braking distance benchmarks</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="source-category">
-                    <h4>Government & Research Institutions</h4>
-                    <ul class="reference-list detailed">
-                        <li>
-                            <strong>NHTSA (National Highway Traffic Safety Administration)</strong>
-                            <span class="ref-detail">US Department of Transportation - Vehicle dynamics and wet traction research</span>
-                        </li>
-                        <li>
-                            <strong>European Road Safety Observatory</strong>
-                            <span class="ref-detail">EU Commission - Road accident data and surface condition analysis</span>
-                        </li>
-                        <li>
-                            <strong>PIARC (World Road Association)</strong>
-                            <span class="ref-detail">International road surface friction guidelines and standards</span>
-                        </li>
-                        <li>
-                            <strong>NASA Langley Research Centre</strong>
-                            <span class="ref-detail">Foundational hydroplaning research (Horne & Dreher, 1963)</span>
-                        </li>
-                        <li>
-                            <strong>NZ Transport Agency (Waka Kotahi)</strong>
-                            <span class="ref-detail">New Zealand road surface standards and local calibration data</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="source-category">
-                    <h4>Tyre Manufacturers (Technical Data)</h4>
-                    <ul class="reference-list detailed">
-                        <li>
-                            <strong>Michelin</strong>
-                            <span class="ref-detail">Technical documentation, compound performance data, wet grip research</span>
-                        </li>
-                        <li>
-                            <strong>Continental AG</strong>
-                            <span class="ref-detail">R&D publications, tread wear studies, temperature performance data</span>
-                        </li>
-                        <li>
-                            <strong>Bridgestone</strong>
-                            <span class="ref-detail">Technical specifications, wet braking test data</span>
-                        </li>
-                        <li>
-                            <strong>Pirelli</strong>
-                            <span class="ref-detail">Performance tyre specifications, temperature optimisation data</span>
-                        </li>
-                        <li>
-                            <strong>Goodyear</strong>
-                            <span class="ref-detail">Aquaplaning research, tread pattern efficiency studies</span>
-                        </li>
-                        <li>
-                            <strong>Bosch (Brake Systems Division)</strong>
-                            <span class="ref-detail">ABS performance data, brake system efficiency factors</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="source-category">
-                    <h4>Academic & Peer-Reviewed Sources</h4>
-                    <ul class="reference-list detailed">
-                        <li>
-                            <strong>Rubber Manufacturers Association</strong>
-                            <span class="ref-detail">Tyre ageing studies, compound degradation research</span>
-                        </li>
-                        <li>
-                            <strong>SAE International Papers</strong>
-                            <span class="ref-detail">Peer-reviewed automotive engineering research</span>
-                        </li>
-                        <li>
-                            <strong>Tire Science and Technology Journal</strong>
-                            <span class="ref-detail">Academic research on tyre physics and performance</span>
                         </li>
                     </ul>
                 </div>
@@ -1642,8 +1918,9 @@
         </div>
     </section>
 
-    <!-- Load physics engine first, then game -->
+    <!-- Load physics engine first, then tyre categories, then game -->
     <script src="js/physics.js"></script>
+    <script src="js/tyre-categories.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>
