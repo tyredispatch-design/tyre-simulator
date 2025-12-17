@@ -41,93 +41,502 @@ const GAME_CONFIG = {
         'E': { label: 'Poor', color: '#ef4444' }
     },
 
-    // Tread depth presets
+    // ═══════════════════════════════════════════════════════════════════════
+    // TREAD DEPTH - Varies by tyre category
+    // ═══════════════════════════════════════════════════════════════════════
+    // Passenger Car (PC): New = 7-9mm (typically 8mm)
+    // SUV/4x4: New = 9-11mm (typically 10mm)
+    // Light Truck (LT): New = 10-14mm (typically 12mm)
+    // Commercial/Truck: New = 12-20mm (typically 15mm)
+    // Motorcycle: New = 5-7mm (typically 6mm)
+    // ═══════════════════════════════════════════════════════════════════════
+    treadDepthByCategory: {
+        'passenger': { newMin: 7, newMax: 9, newTypical: 8, label: 'Passenger Car' },
+        'suv': { newMin: 9, newMax: 11, newTypical: 10, label: 'SUV/4x4' },
+        'lightTruck': { newMin: 10, newMax: 14, newTypical: 12, label: 'Light Truck' },
+        'commercial': { newMin: 12, newMax: 20, newTypical: 15, label: 'Commercial/Truck' },
+        'motorcycle': { newMin: 5, newMax: 7, newTypical: 6, label: 'Motorcycle' }
+    },
+
+    // Tread depth presets - dynamically adjusted based on category
+    // Default values shown for passenger car (8mm new)
     treadPresets: {
-        'new': { value: 8, label: 'New (8mm)', status: 'excellent' },
-        'good': { value: 5, label: 'Good (5mm)', status: 'good' },
-        'worn': { value: 3, label: 'Worn (3mm)', status: 'warning' },
-        'legal': { value: 1.6, label: 'Legal Min (1.6mm)', status: 'danger' }
+        'new': { value: 8, label: 'New (8mm+)', status: 'excellent', percentOfNew: 1.0 },
+        'good': { value: 5, label: 'Good (5mm)', status: 'good', percentOfNew: 0.625 },
+        'worn': { value: 3, label: 'Worn (3mm)', status: 'warning', percentOfNew: 0.375 },
+        'legal': { value: 1.6, label: 'Legal Min (1.6mm)', status: 'danger', percentOfNew: 0.2 }
     },
 
-    // Weather presets for the game
+    // ═══════════════════════════════════════════════════════════════════════
+    // WEATHER PRESETS - Including snow and cloudy conditions
+    // ═══════════════════════════════════════════════════════════════════════
     weatherPresets: {
-        'DRY': { label: 'Dry', icon: '☀️', waterMm: 0 },
-        'DAMP': { label: 'Damp', icon: '🌫️', waterMm: 0.1 },
-        'LIGHT_RAIN': { label: 'Light Rain', icon: '🌦️', waterMm: 0.3 },
-        'RAIN': { label: 'Rain', icon: '🌧️', waterMm: 0.7 },
-        'HEAVY_RAIN': { label: 'Heavy Rain', icon: '⛈️', waterMm: 1.5 }
+        'DRY': { label: 'Dry/Sunny', icon: '☀️', waterMm: 0, tempEffect: 0, visibility: 1.0 },
+        'CLOUDY': { label: 'Cloudy', icon: '☁️', waterMm: 0, tempEffect: -2, visibility: 0.95 },
+        'OVERCAST': { label: 'Overcast', icon: '🌥️', waterMm: 0, tempEffect: -3, visibility: 0.90 },
+        'DAMP': { label: 'Damp', icon: '🌫️', waterMm: 0.1, tempEffect: -2, visibility: 0.85 },
+        'FOG': { label: 'Fog', icon: '🌁', waterMm: 0.05, tempEffect: -4, visibility: 0.30 },
+        'MIST': { label: 'Mist', icon: '🌫️', waterMm: 0.02, tempEffect: -3, visibility: 0.50 },
+        'LIGHT_RAIN': { label: 'Light Rain', icon: '🌦️', waterMm: 0.3, tempEffect: -3, visibility: 0.75 },
+        'RAIN': { label: 'Rain', icon: '🌧️', waterMm: 0.7, tempEffect: -5, visibility: 0.60 },
+        'HEAVY_RAIN': { label: 'Heavy Rain', icon: '⛈️', waterMm: 1.5, tempEffect: -6, visibility: 0.40 },
+        'SLEET': { label: 'Sleet', icon: '🌨️', waterMm: 0.8, tempEffect: -8, visibility: 0.50 },
+        'LIGHT_SNOW': { label: 'Light Snow', icon: '🌨️', waterMm: 0, snowMm: 5, tempEffect: -10, visibility: 0.60 },
+        'SNOW': { label: 'Snow', icon: '❄️', waterMm: 0, snowMm: 20, tempEffect: -12, visibility: 0.45 },
+        'HEAVY_SNOW': { label: 'Heavy Snow', icon: '☃️', waterMm: 0, snowMm: 50, tempEffect: -15, visibility: 0.25 },
+        'BLIZZARD': { label: 'Blizzard', icon: '🌬️', waterMm: 0, snowMm: 100, tempEffect: -20, visibility: 0.10 },
+        'HAIL': { label: 'Hail', icon: '🧊', waterMm: 1.0, tempEffect: -5, visibility: 0.50 },
+        'CUSTOM': { label: 'Custom', icon: '🔧', waterMm: 0, tempEffect: 0, visibility: 1.0 }
     },
 
-    // Tyre type presets
+    // ═══════════════════════════════════════════════════════════════════════
+    // TYRE TYPES - Including runflat and specialty tyres
+    // ═══════════════════════════════════════════════════════════════════════
     tyreTypes: {
-        'summer': { label: 'Summer', icon: '☀️', wetGripBonus: 1.00 },
-        'allseason': { label: 'All-Season', icon: '🍂', wetGripBonus: 1.04 },
-        'winter': { label: 'Winter', icon: '❄️', wetGripBonus: 1.10 }
+        'summer': { label: 'Summer', icon: '☀️', wetGripBonus: 1.00, tempRange: { min: 7, max: 45 }, desc: 'Optimized for warm, dry conditions' },
+        'allseason': { label: 'All-Season', icon: '🍂', wetGripBonus: 1.04, tempRange: { min: -5, max: 35 }, desc: 'Year-round compromise' },
+        'winter': { label: 'Winter', icon: '❄️', wetGripBonus: 1.10, tempRange: { min: -40, max: 10 }, desc: 'Cold weather and snow' },
+        'allterrain': { label: 'All-Terrain (A/T)', icon: '🏔️', wetGripBonus: 0.95, tempRange: { min: -20, max: 40 }, desc: 'On/off-road mix' },
+        'mudterrain': { label: 'Mud-Terrain (M/T)', icon: '🪨', wetGripBonus: 0.85, tempRange: { min: -10, max: 40 }, desc: 'Aggressive off-road' }
     },
 
-    // Pressure settings
+    // ═══════════════════════════════════════════════════════════════════════
+    // TYRE COMPOUNDS - Including runflat and specialty types
+    // ═══════════════════════════════════════════════════════════════════════
+    tyreCompounds: {
+        'economy': { label: 'Economy', gripFactor: 0.90, wearRate: 0.7, desc: 'Longer life, less grip' },
+        'touring': { label: 'Touring', gripFactor: 1.00, wearRate: 1.0, desc: 'Balanced performance' },
+        'performance': { label: 'Performance', gripFactor: 1.10, wearRate: 1.3, desc: 'Better grip, faster wear' },
+        'uhp': { label: 'Ultra High Performance', gripFactor: 1.20, wearRate: 1.6, desc: 'Maximum dry grip' },
+        'track': { label: 'Track/Semi-Slick', gripFactor: 1.35, wearRate: 2.5, desc: 'Race compound, rapid wear' },
+        'runflat': { label: 'Run-Flat (RFT)', gripFactor: 0.95, wearRate: 1.1, desc: 'Can drive 80km when flat, stiffer ride' },
+        'selfseal': { label: 'Self-Sealing', gripFactor: 0.98, wearRate: 1.0, desc: 'Auto-seals small punctures' },
+        'quiet': { label: 'Comfort/Quiet', gripFactor: 0.95, wearRate: 0.9, desc: 'Low noise, softer compound' },
+        'eco': { label: 'Eco/Low Rolling', gripFactor: 0.92, wearRate: 0.8, desc: 'Fuel efficient, harder compound' }
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // TERRAIN CATEGORIES - From TyreCategoriesSourced research module
+    // ═══════════════════════════════════════════════════════════════════════
+    // These modify grip based on tyre design purpose vs current surface
+    // Values sourced from TyreReviews, Tire Rack, Wong (1993) - see tyre-categories.js
+    // ═══════════════════════════════════════════════════════════════════════
+    terrainCategories: {
+        'PC':         { code: 'PC',         label: 'Passenger Car',       icon: '🚗', desc: 'Standard passenger tyres - touring, comfort, economy' },
+        'HT':         { code: 'HT',         label: 'Highway Terrain',     icon: '🛣️', desc: 'Optimised for sealed roads. Best ride, lowest noise.' },
+        'AT':         { code: 'AT',         label: 'All-Terrain',         icon: '🏔️', desc: '50/50 on-road/off-road. Many have 3PMSF.' },
+        'MT':         { code: 'MT',         label: 'Mud-Terrain',         icon: '🪨', desc: 'Extreme off-road. Deep tread, large voids. Noisy on-road.' },
+        'RT':         { code: 'RT',         label: 'Rugged-Terrain',      icon: '⛰️', desc: 'Hybrid AT/MT. More aggressive than AT.' },
+        'WINTER':     { code: 'WINTER',     label: 'Winter/Snow',         icon: '❄️', desc: 'Cold-weather compound, deep siping. 3PMSF certified.' },
+        'ALLSEASON':  { code: 'ALLSEASON',  label: 'All-Season (M+S)',    icon: '🍂', desc: 'Year-round compromise. M+S rated but NOT 3PMSF.' },
+        'ALLWEATHER': { code: 'ALLWEATHER', label: 'All-Weather (3PMSF)', icon: '🌤️', desc: 'Year-round with 3PMSF certification. True 4-season.' },
+        'HP':         { code: 'HP',         label: 'High Performance',    icon: '🏎️', desc: 'Sporty driving, softer compound, better grip, faster wear.' },
+        'UHP':        { code: 'UHP',        label: 'Ultra High Perf',     icon: '🏁', desc: 'Track-capable road tyres. Maximum dry grip, fast wear.' }
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PATTERN DIRECTIONS - From TyreCategoriesSourced research module
+    // ═══════════════════════════════════════════════════════════════════════
+    // These affect water evacuation and cornering grip
+    // Values sourced from Continental, Kwik Fit, The AA - see tyre-categories.js
+    // ═══════════════════════════════════════════════════════════════════════
+    patternDirections: {
+        'SYMMETRICAL':              { code: 'SYMMETRICAL',              label: 'Symmetrical',              icon: '⬛', desc: 'Identical inner/outer tread. Most common on economy tyres.' },
+        'DIRECTIONAL':              { code: 'DIRECTIONAL',              label: 'Directional (V-pattern)',  icon: '🔻', desc: 'V-shaped tread pointing forward. Best water evacuation.' },
+        'ASYMMETRICAL':             { code: 'ASYMMETRICAL',             label: 'Asymmetrical',             icon: '◐', desc: 'Different inner/outer patterns. Best all-round performance.' },
+        'ASYMMETRICAL_DIRECTIONAL': { code: 'ASYMMETRICAL_DIRECTIONAL', label: 'Asym-Directional',         icon: '◑', desc: 'Combines both designs. Rare, expensive, maximum performance.' }
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PRESSURE - Dynamic calculation based on tyre size and load
+    // ═══════════════════════════════════════════════════════════════════════
+    // From PSI guide: 32-36 PSI typical passenger, 35-80 PSI light truck
+    // Formula: (Actual Load ÷ Max Load) × Max PSI × 1.1 Safety Margin
+    // Temperature: ±1 PSI per 5°C change
+    // ═══════════════════════════════════════════════════════════════════════
     pressure: {
-        optimal: 32,
-        minSafe: 28,
-        maxSafe: 36
+        // Base recommendations by vehicle category
+        byCategory: {
+            'motorcycle': { front: 28, rear: 32, min: 24, max: 42 },
+            'compact': { front: 30, rear: 30, min: 26, max: 36 },
+            'passenger': { front: 32, rear: 32, min: 28, max: 38 },
+            'suv': { front: 33, rear: 35, min: 30, max: 44 },
+            'lightTruck': { front: 35, rear: 40, min: 30, max: 65 },
+            'commercial': { front: 80, rear: 100, min: 65, max: 125 },
+            'caravan': { single: 50, dual: 65, min: 40, max: 80 }
+        },
+        // Adjustments
+        loadedAdjustment: 4,      // Add 4-7 PSI when heavily loaded
+        towingRearAdjust: 5,      // Add to rear when towing
+        coldWeatherAdjust: 3,     // Add 3 PSI in cold weather
+        offRoadDeflate: -10,      // Reduce for soft sand/mud (as low as 15-20 PSI)
+        highSpeedAdjust: 4,       // Add for sustained highway >120km/h
+        // Temperature effect
+        tempEffect: 0.2,          // PSI change per 1°C (≈1 PSI per 5°C)
+        referenceTemp: 20         // Reference temperature for calculations
     },
 
-    // Tyre width presets
+    // ═══════════════════════════════════════════════════════════════════════
+    // TYRE WIDTHS - Full range from 125mm to 425mm
+    // ═══════════════════════════════════════════════════════════════════════
+    // 125-155: Small cars, trailers, classic cars
+    // 165-195: Compact cars, economy vehicles
+    // 205-225: Standard passenger cars
+    // 235-265: SUVs, performance cars
+    // 275-315: Sports cars, large SUVs
+    // 325-425: Supercars, trucks, commercial
+    // ═══════════════════════════════════════════════════════════════════════
     tyreWidths: {
-        165: { label: '165mm', desc: 'Narrow', hydroRisk: 0.85 },
-        205: { label: '205mm', desc: 'Standard', hydroRisk: 1.00 },
-        245: { label: '245mm', desc: 'Wide', hydroRisk: 1.15 },
-        295: { label: '295mm', desc: 'Performance', hydroRisk: 1.30 }
+        125: { label: '125mm', desc: 'Trailer/Classic', hydroRisk: 0.70, category: 'narrow' },
+        135: { label: '135mm', desc: 'Space Saver', hydroRisk: 0.72, category: 'narrow' },
+        145: { label: '145mm', desc: 'Kei Car/Trailer', hydroRisk: 0.75, category: 'narrow' },
+        155: { label: '155mm', desc: 'Small Car', hydroRisk: 0.78, category: 'narrow' },
+        165: { label: '165mm', desc: 'Compact', hydroRisk: 0.82, category: 'narrow' },
+        175: { label: '175mm', desc: 'Compact+', hydroRisk: 0.86, category: 'standard' },
+        185: { label: '185mm', desc: 'Small Sedan', hydroRisk: 0.90, category: 'standard' },
+        195: { label: '195mm', desc: 'Sedan', hydroRisk: 0.95, category: 'standard' },
+        205: { label: '205mm', desc: 'Standard', hydroRisk: 1.00, category: 'standard' },
+        215: { label: '215mm', desc: 'Standard+', hydroRisk: 1.05, category: 'standard' },
+        225: { label: '225mm', desc: 'Mid-Size', hydroRisk: 1.10, category: 'standard' },
+        235: { label: '235mm', desc: 'SUV/Sport', hydroRisk: 1.15, category: 'wide' },
+        245: { label: '245mm', desc: 'Large SUV', hydroRisk: 1.20, category: 'wide' },
+        255: { label: '255mm', desc: 'Performance', hydroRisk: 1.25, category: 'wide' },
+        265: { label: '265mm', desc: '4x4/Sport', hydroRisk: 1.30, category: 'wide' },
+        275: { label: '275mm', desc: 'Sports Car', hydroRisk: 1.35, category: 'performance' },
+        285: { label: '285mm', desc: 'Rear Sports', hydroRisk: 1.40, category: 'performance' },
+        295: { label: '295mm', desc: 'High Perf', hydroRisk: 1.45, category: 'performance' },
+        305: { label: '305mm', desc: 'Supercar', hydroRisk: 1.50, category: 'performance' },
+        315: { label: '315mm', desc: 'Supercar+', hydroRisk: 1.55, category: 'ultra' },
+        325: { label: '325mm', desc: 'Hypercar', hydroRisk: 1.60, category: 'ultra' },
+        335: { label: '335mm', desc: 'Hypercar+', hydroRisk: 1.65, category: 'ultra' },
+        345: { label: '345mm', desc: 'Race/Truck', hydroRisk: 1.70, category: 'ultra' },
+        355: { label: '355mm', desc: 'Wide Truck', hydroRisk: 1.75, category: 'ultra' },
+        365: { label: '365mm', desc: 'Super Wide', hydroRisk: 1.80, category: 'ultra' },
+        385: { label: '385mm', desc: 'Commercial', hydroRisk: 1.85, category: 'ultra' },
+        425: { label: '425mm', desc: 'Max Width', hydroRisk: 1.95, category: 'ultra' }
     },
 
-    // Surface types with friction coefficients
-    // Coefficients based on real-world data from automotive research
+    // ═══════════════════════════════════════════════════════════════════════
+    // SURFACES - Comprehensive list with rolling resistance factors
+    // ═══════════════════════════════════════════════════════════════════════
     surfaces: {
-        'ASPHALT_STD': { label: 'Asphalt', icon: '🛣️', baseMu: 0.80, wetMu: 0.55 },
-        'CONCRETE': { label: 'Concrete', icon: '🏗️', baseMu: 0.75, wetMu: 0.50 },
-        'GRAVEL': { label: 'Gravel', icon: '🪨', baseMu: 0.40, wetMu: 0.35 },
-        'DIRT': { label: 'Dirt', icon: '🌍', baseMu: 0.35, wetMu: 0.25 },
-        'MUD': { label: 'Mud', icon: '🟤', baseMu: 0.20, wetMu: 0.15 },
-        'GRASS': { label: 'Grass', icon: '🌿', baseMu: 0.35, wetMu: 0.20 },
-        'SAND': { label: 'Sand', icon: '🏖️', baseMu: 0.30, wetMu: 0.25 },
-        'SNOW': { label: 'Snow', icon: '🌨️', baseMu: 0.25, wetMu: 0.20 },
-        'ICE': { label: 'Ice', icon: '🧊', baseMu: 0.10, wetMu: 0.08 }
+        // Paved surfaces
+        'ASPHALT_NEW': { label: 'New Asphalt', icon: '🛣️', baseMu: 0.85, wetMu: 0.60, rollingFactor: 1.0, desc: 'Fresh, smooth asphalt' },
+        'ASPHALT_STD': { label: 'Asphalt', icon: '🛣️', baseMu: 0.80, wetMu: 0.55, rollingFactor: 1.0, desc: 'Standard road surface' },
+        'ASPHALT_OLD': { label: 'Worn Asphalt', icon: '🛣️', baseMu: 0.70, wetMu: 0.45, rollingFactor: 1.1, desc: 'Aged, polished surface' },
+        'CONCRETE': { label: 'Concrete', icon: '🏗️', baseMu: 0.75, wetMu: 0.50, rollingFactor: 1.0, desc: 'Highway/bridge surface' },
+        'CONCRETE_GROOVED': { label: 'Grooved Concrete', icon: '🏗️', baseMu: 0.80, wetMu: 0.60, rollingFactor: 1.05, desc: 'Rain-channeling grooves' },
+        'COBBLESTONE': { label: 'Cobblestone', icon: '🧱', baseMu: 0.55, wetMu: 0.40, rollingFactor: 1.4, desc: 'Historic paving' },
+        'BRICK': { label: 'Brick Paving', icon: '🧱', baseMu: 0.60, wetMu: 0.45, rollingFactor: 1.3, desc: 'Decorative paving' },
+
+        // Unpaved surfaces
+        'GRAVEL_COMPACT': { label: 'Compact Gravel', icon: '🪨', baseMu: 0.50, wetMu: 0.40, rollingFactor: 1.5, desc: 'Well-maintained gravel' },
+        'GRAVEL': { label: 'Loose Gravel', icon: '🪨', baseMu: 0.40, wetMu: 0.35, rollingFactor: 1.8, desc: 'Typical gravel road' },
+        'DIRT_HARD': { label: 'Hard-Packed Dirt', icon: '🌍', baseMu: 0.45, wetMu: 0.30, rollingFactor: 1.4, desc: 'Dry, compacted earth' },
+        'DIRT': { label: 'Dirt Road', icon: '🌍', baseMu: 0.35, wetMu: 0.25, rollingFactor: 2.0, desc: 'Standard dirt track' },
+        'DIRT_LOOSE': { label: 'Loose Dirt', icon: '🌍', baseMu: 0.30, wetMu: 0.20, rollingFactor: 2.5, desc: 'Soft, loose earth' },
+        'MUD_LIGHT': { label: 'Light Mud', icon: '🟤', baseMu: 0.25, wetMu: 0.20, rollingFactor: 2.5, desc: 'Shallow mud' },
+        'MUD': { label: 'Mud', icon: '🟤', baseMu: 0.20, wetMu: 0.15, rollingFactor: 3.0, desc: 'Standard mud' },
+        'MUD_DEEP': { label: 'Deep Mud', icon: '🟤', baseMu: 0.15, wetMu: 0.10, rollingFactor: 4.0, desc: 'Wheel-sucking mud' },
+
+        // Natural surfaces
+        'GRASS_DRY': { label: 'Dry Grass', icon: '🌿', baseMu: 0.40, wetMu: 0.25, rollingFactor: 2.0, desc: 'Short, dry grass' },
+        'GRASS': { label: 'Grass', icon: '🌿', baseMu: 0.35, wetMu: 0.20, rollingFactor: 2.2, desc: 'Standard lawn' },
+        'GRASS_WET': { label: 'Wet Grass', icon: '🌿', baseMu: 0.25, wetMu: 0.15, rollingFactor: 2.5, desc: 'Dew/rain soaked' },
+        'SAND_HARD': { label: 'Hard Sand', icon: '🏖️', baseMu: 0.40, wetMu: 0.35, rollingFactor: 2.0, desc: 'Wet beach sand' },
+        'SAND': { label: 'Sand', icon: '🏖️', baseMu: 0.30, wetMu: 0.25, rollingFactor: 3.0, desc: 'Loose beach sand' },
+        'SAND_SOFT': { label: 'Soft Sand', icon: '🏖️', baseMu: 0.20, wetMu: 0.18, rollingFactor: 4.0, desc: 'Deep, dry sand' },
+
+        // Winter surfaces
+        'SNOW_PACKED': { label: 'Packed Snow', icon: '🌨️', baseMu: 0.30, wetMu: 0.25, rollingFactor: 1.8, desc: 'Compressed snow' },
+        'SNOW': { label: 'Snow', icon: '🌨️', baseMu: 0.25, wetMu: 0.20, rollingFactor: 2.0, desc: 'Fresh snow' },
+        'SNOW_DEEP': { label: 'Deep Snow', icon: '❄️', baseMu: 0.20, wetMu: 0.15, rollingFactor: 3.5, desc: 'Unplowed snow' },
+        'SLUSH': { label: 'Slush', icon: '🌊', baseMu: 0.20, wetMu: 0.15, rollingFactor: 2.5, desc: 'Melting snow/water' },
+        'ICE': { label: 'Ice', icon: '🧊', baseMu: 0.10, wetMu: 0.08, rollingFactor: 0.3, desc: 'Sheet ice' },
+        'BLACK_ICE': { label: 'Black Ice', icon: '🖤', baseMu: 0.05, wetMu: 0.05, rollingFactor: 0.2, desc: 'Invisible ice layer' },
+
+        // Special surfaces
+        'METAL_DRY': { label: 'Metal Grate', icon: '🔩', baseMu: 0.45, wetMu: 0.30, rollingFactor: 1.2, desc: 'Bridge grating' },
+        'METAL_WET': { label: 'Wet Metal', icon: '🔩', baseMu: 0.25, wetMu: 0.15, rollingFactor: 1.2, desc: 'Slippery when wet' },
+        'PAINTED_LINES': { label: 'Road Markings', icon: '🎨', baseMu: 0.50, wetMu: 0.30, rollingFactor: 1.0, desc: 'Paint on asphalt' },
+        'MANHOLE': { label: 'Manhole Cover', icon: '⚫', baseMu: 0.40, wetMu: 0.20, rollingFactor: 1.0, desc: 'Metal cover' },
+        'OIL_SPILL': { label: 'Oil/Diesel Spill', icon: '🛢️', baseMu: 0.15, wetMu: 0.10, rollingFactor: 1.0, desc: 'Extremely slippery' },
+        'LEAVES_WET': { label: 'Wet Leaves', icon: '🍂', baseMu: 0.30, wetMu: 0.20, rollingFactor: 1.5, desc: 'Autumn hazard' }
     },
 
-    // Vehicle types with weight factors
+    // ═══════════════════════════════════════════════════════════════════════
+    // VEHICLES - 12 options with varied drivetrains
+    // ═══════════════════════════════════════════════════════════════════════
     vehicles: {
-        'hatchback': { label: 'Hatchback', weight: 1200, factor: 0.95 },
-        'sedan': { label: 'Sedan', weight: 1500, factor: 1.00 },
-        'suv': { label: 'SUV', weight: 2000, factor: 1.08 },
-        'truck': { label: 'Truck', weight: 2500, factor: 1.15 }
+        'motorcycle': {
+            label: 'Motorcycle', icon: '🏍️', weight: 250, factor: 0.70,
+            drivetrain: 'RWD', differential: 'CHAIN',
+            tyreCategory: 'motorcycle', wheelbase: 1.4, cgHeight: 0.6,
+            typicalPsi: { front: 28, rear: 32 }
+        },
+        'citycar': {
+            label: 'City Car', icon: '🚗', weight: 900, factor: 0.85,
+            drivetrain: 'FWD', differential: 'OPEN',
+            tyreCategory: 'passenger', wheelbase: 2.3, cgHeight: 0.5,
+            typicalPsi: { front: 30, rear: 30 }
+        },
+        'hatchback': {
+            label: 'Hatchback', icon: '🚗', weight: 1200, factor: 0.95,
+            drivetrain: 'FWD', differential: 'OPEN',
+            tyreCategory: 'passenger', wheelbase: 2.5, cgHeight: 0.5,
+            typicalPsi: { front: 32, rear: 32 }
+        },
+        'sedan': {
+            label: 'Sedan', icon: '🚙', weight: 1500, factor: 1.00,
+            drivetrain: 'FWD', differential: 'OPEN',
+            tyreCategory: 'passenger', wheelbase: 2.7, cgHeight: 0.5,
+            typicalPsi: { front: 32, rear: 32 }
+        },
+        'wagon': {
+            label: 'Wagon/Estate', icon: '🚙', weight: 1600, factor: 1.02,
+            drivetrain: 'AWD', differential: 'OPEN',
+            tyreCategory: 'passenger', wheelbase: 2.8, cgHeight: 0.55,
+            typicalPsi: { front: 33, rear: 35 }
+        },
+        'coupe': {
+            label: 'Sports Coupe', icon: '🏎️', weight: 1400, factor: 0.98,
+            drivetrain: 'RWD', differential: 'LSD',
+            tyreCategory: 'passenger', wheelbase: 2.6, cgHeight: 0.45,
+            typicalPsi: { front: 32, rear: 34 }
+        },
+        'suv_compact': {
+            label: 'Compact SUV', icon: '🚙', weight: 1600, factor: 1.05,
+            drivetrain: 'AWD', differential: 'OPEN',
+            tyreCategory: 'suv', wheelbase: 2.6, cgHeight: 0.65,
+            typicalPsi: { front: 33, rear: 33 }
+        },
+        'suv': {
+            label: 'SUV', icon: '🚙', weight: 2000, factor: 1.08,
+            drivetrain: 'AWD', differential: 'LSD',
+            tyreCategory: 'suv', wheelbase: 2.8, cgHeight: 0.70,
+            typicalPsi: { front: 33, rear: 35 }
+        },
+        'suv_large': {
+            label: 'Large SUV/4x4', icon: '🚙', weight: 2500, factor: 1.12,
+            drivetrain: 'AWD', differential: 'LOCKING',
+            tyreCategory: 'suv', wheelbase: 3.0, cgHeight: 0.75,
+            typicalPsi: { front: 35, rear: 38 }
+        },
+        'pickup': {
+            label: 'Pickup/Ute', icon: '🛻', weight: 2200, factor: 1.10,
+            drivetrain: 'RWD', differential: 'OPEN',
+            tyreCategory: 'lightTruck', wheelbase: 3.2, cgHeight: 0.70,
+            typicalPsi: { front: 35, rear: 40 }
+        },
+        'van': {
+            label: 'Van', icon: '🚐', weight: 2000, factor: 1.08,
+            drivetrain: 'FWD', differential: 'OPEN',
+            tyreCategory: 'lightTruck', wheelbase: 3.0, cgHeight: 0.80,
+            typicalPsi: { front: 36, rear: 42 }
+        },
+        'truck': {
+            label: 'Light Truck', icon: '🚚', weight: 3500, factor: 1.20,
+            drivetrain: 'RWD', differential: 'OPEN',
+            tyreCategory: 'lightTruck', wheelbase: 4.0, cgHeight: 0.90,
+            typicalPsi: { front: 50, rear: 65 }
+        }
     },
 
-    // Temperature settings
+    // ═══════════════════════════════════════════════════════════════════════
+    // VEHICLE COLOURS - 8 colours per vehicle type (from vehicles-final-8col.html)
+    // ═══════════════════════════════════════════════════════════════════════
+    vehicleColours: {
+        // Sedan colours - Red first (default)
+        'sedan': ['#EF4444', '#1F2937', '#F3F4F6', '#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#78350F'],
+        // Ute/Pickup colours - Red first (default)
+        'pickup': ['#DC2626', '#FBBF24', '#F3F4F6', '#1F2937', '#1E40AF', '#065F46', '#7C2D12', '#6B7280'],
+        // Van colours - White first (default)
+        'van': ['#F3F4F6', '#3B82F6', '#1F2937', '#FBBF24', '#DC2626', '#059669', '#7C3AED', '#6B7280'],
+        // SUV/4x4 colours - Red first (default)
+        'suv': ['#DC2626', '#065F46', '#1F2937', '#F3F4F6', '#1E3A8A', '#78350F', '#6B7280', '#F59E0B'],
+        'suv_compact': ['#065F46', '#1F2937', '#F3F4F6', '#1E3A8A', '#78350F', '#DC2626', '#6B7280', '#F59E0B'],
+        'suv_large': ['#065F46', '#1F2937', '#F3F4F6', '#1E3A8A', '#78350F', '#DC2626', '#6B7280', '#F59E0B'],
+        // Default colours for other vehicles (same as sedan)
+        'default': ['#1F2937', '#F3F4F6', '#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#6366F1', '#78350F']
+    },
+
+    // Vehicle drawing type mapping (which drawing function to use)
+    vehicleDrawingType: {
+        'motorcycle': 'sedan',    // Use sedan shape for now
+        'citycar': 'sedan',
+        'hatchback': 'sedan',
+        'sedan': 'sedan',
+        'wagon': 'sedan',
+        'coupe': 'sedan',
+        'suv_compact': 'suv',
+        'suv': 'suv',
+        'suv_large': 'suv',
+        'pickup': 'ute',
+        'van': 'van',
+        'truck': 'van'
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // TEMPERATURE - Global range (-50°C to +55°C)
+    // ═══════════════════════════════════════════════════════════════════════
+    // Covers: Antarctica (-50°C), Siberia (-45°C), Canada (-40°C),
+    //         Middle East (+50°C), Death Valley (+55°C)
+    // ═══════════════════════════════════════════════════════════════════════
     temperature: {
-        optimal: 20,
-        coldThreshold: 7,
-        hotThreshold: 35
+        globalMin: -50,       // Antarctica/Siberia extreme
+        globalMax: 55,        // Death Valley extreme
+        optimal: 20,          // Ideal for most tyres
+        coldThreshold: 7,     // Summer tyres lose grip below
+        freezing: 0,          // Water freezes
+        hotThreshold: 35,     // Road surface softens
+        extreme: 45,          // Tyre compound degrades faster
+        // Regional defaults
+        regions: {
+            'temperate': { summer: 22, winter: 5, label: 'Temperate (NZ/UK/Japan)' },
+            'continental': { summer: 28, winter: -10, label: 'Continental (Europe/US)' },
+            'tropical': { summer: 32, winter: 25, label: 'Tropical (SEA/Pacific)' },
+            'desert': { summer: 45, winter: 15, label: 'Desert (Middle East/Australia)' },
+            'arctic': { summer: 10, winter: -30, label: 'Arctic (Scandinavia/Canada)' },
+            'alpine': { summer: 18, winter: -15, label: 'Alpine/Mountain' }
+        }
     },
 
     // Wind settings - effect on aerodynamic drag
     wind: {
-        // Wind direction effects (multiplier on stopping distance)
-        // Headwind helps braking (adds drag), tailwind extends it
         directions: {
-            'headwind': { label: 'Headwind', effect: -1 },    // Reduces stopping distance
-            'crosswind': { label: 'Crosswind', effect: 0 },   // Stability risk, minimal distance effect
-            'tailwind': { label: 'Tailwind', effect: 1 }      // Increases stopping distance
+            'headwind': { label: 'Headwind', effect: -1 },
+            'crosswind': { label: 'Crosswind', effect: 0 },
+            'tailwind': { label: 'Tailwind', effect: 1 }
         }
     },
 
-    // Trailer settings
+    // ═══════════════════════════════════════════════════════════════════════
+    // TRAILER/TOWING - Comprehensive types
+    // ═══════════════════════════════════════════════════════════════════════
     trailer: {
         types: {
-            'none': { label: 'No Trailer', brakingFactor: 1.00 },
-            'unbraked': { label: 'Unbraked', brakingFactor: 0.70 },  // All braking from tow vehicle
-            'braked': { label: 'Braked', brakingFactor: 0.90 }       // Trailer has own brakes
+            // Basic options (for simple UI)
+            'none': {
+                label: 'No Trailer', brakingFactor: 1.00,
+                typicalWeight: 0, maxWeight: 0, wheels: 0
+            },
+            'unbraked': {
+                label: 'Unbraked Trailer', brakingFactor: 0.70,
+                typicalWeight: 400, maxWeight: 750, wheels: 2,
+                braked: false, desc: 'Generic unbraked trailer'
+            },
+            'braked': {
+                label: 'Braked Trailer', brakingFactor: 0.90,
+                typicalWeight: 1000, maxWeight: 2500, wheels: 2,
+                braked: true, desc: 'Generic braked trailer'
+            },
+
+            // Light trailers (typically unbraked)
+            'box_small': {
+                label: 'Small Box Trailer', brakingFactor: 0.65,
+                typicalWeight: 200, maxWeight: 500, wheels: 2,
+                braked: false, desc: 'Garden/DIY trailer'
+            },
+            'bike_rack': {
+                label: 'Bike/Motorcycle Trailer', brakingFactor: 0.70,
+                typicalWeight: 150, maxWeight: 400, wheels: 2,
+                braked: false, desc: 'Single/dual bike carrier'
+            },
+            'jet_ski': {
+                label: 'Jet Ski/PWC Trailer', brakingFactor: 0.68,
+                typicalWeight: 300, maxWeight: 600, wheels: 2,
+                braked: false, desc: 'Personal watercraft'
+            },
+
+            // Medium trailers (braked/unbraked)
+            'box_medium': {
+                label: 'Medium Box Trailer', brakingFactor: 0.75,
+                typicalWeight: 400, maxWeight: 750, wheels: 2,
+                braked: false, desc: 'General purpose'
+            },
+            'boat_small': {
+                label: 'Small Boat Trailer', brakingFactor: 0.72,
+                typicalWeight: 500, maxWeight: 1000, wheels: 2,
+                braked: true, desc: 'Dinghy/small boat'
+            },
+            'horsefloat_single': {
+                label: 'Single Horse Float', brakingFactor: 0.78,
+                typicalWeight: 600, maxWeight: 1200, wheels: 2,
+                braked: true, desc: 'Single horse transport'
+            },
+
+            // Heavy trailers (always braked)
+            'box_large': {
+                label: 'Large Box Trailer', brakingFactor: 0.85,
+                typicalWeight: 800, maxWeight: 2000, wheels: 2,
+                braked: true, desc: 'Heavy-duty trailer'
+            },
+            'boat_medium': {
+                label: 'Boat Trailer', brakingFactor: 0.82,
+                typicalWeight: 1000, maxWeight: 2500, wheels: 2,
+                braked: true, desc: 'Medium boat'
+            },
+            'horsefloat_double': {
+                label: 'Double Horse Float', brakingFactor: 0.85,
+                typicalWeight: 1200, maxWeight: 2500, wheels: 4,
+                braked: true, desc: 'Two horse transport'
+            },
+            'car_trailer': {
+                label: 'Car Trailer', brakingFactor: 0.88,
+                typicalWeight: 600, maxWeight: 2500, wheels: 4,
+                braked: true, desc: 'Vehicle transport'
+            },
+
+            // Caravans
+            'caravan_small': {
+                label: 'Small Caravan', brakingFactor: 0.85,
+                typicalWeight: 1000, maxWeight: 1500, wheels: 2,
+                braked: true, desc: 'Pop-top/small caravan'
+            },
+            'caravan_medium': {
+                label: 'Medium Caravan', brakingFactor: 0.88,
+                typicalWeight: 1500, maxWeight: 2500, wheels: 2,
+                braked: true, desc: 'Standard caravan'
+            },
+            'caravan_large': {
+                label: 'Large Caravan', brakingFactor: 0.90,
+                typicalWeight: 2200, maxWeight: 3500, wheels: 4,
+                braked: true, desc: 'Full-size caravan'
+            },
+            'fifthwheel': {
+                label: 'Fifth Wheel', brakingFactor: 0.92,
+                typicalWeight: 3000, maxWeight: 5000, wheels: 4,
+                braked: true, desc: 'Gooseneck hitch caravan'
+            },
+
+            // Commercial
+            'livestock': {
+                label: 'Livestock Trailer', brakingFactor: 0.85,
+                typicalWeight: 1500, maxWeight: 3500, wheels: 4,
+                braked: true, desc: 'Animal transport'
+            },
+            'flatdeck': {
+                label: 'Flatdeck Trailer', brakingFactor: 0.88,
+                typicalWeight: 800, maxWeight: 3500, wheels: 4,
+                braked: true, desc: 'Flat platform trailer'
+            },
+            'tanker': {
+                label: 'Tanker Trailer', brakingFactor: 0.90,
+                typicalWeight: 500, maxWeight: 3000, wheels: 4,
+                braked: true, desc: 'Liquid transport (sloshing hazard)'
+            }
         },
-        maxUnbrakedKg: 750  // NZ legal max for unbraked trailer
+        // Legal limits (NZ)
+        maxUnbrakedKg: 750,
+        maxBrakedKg: 3500,
+        // Load states
+        loadStates: {
+            'empty': { factor: 0.3, label: 'Empty' },
+            'light': { factor: 0.5, label: 'Light Load' },
+            'half': { factor: 0.7, label: 'Half Load' },
+            'full': { factor: 1.0, label: 'Full Load' },
+            'overloaded': { factor: 1.2, label: 'Overloaded (Dangerous!)' }
+        }
     }
 };
 
@@ -710,142 +1119,347 @@ class GradeTestRenderer {
         });
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // VEHICLE DRAWING SYSTEM - 4 vehicle types with 8 colours each
+    // From vehicles-final-8col.html - Canvas-based vehicle rendering
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Helper: Darken a hex colour
+    _darkenColour(hex, amount) {
+        const num = parseInt(hex.replace('#', ''), 16);
+        const r = Math.max(0, (num >> 16) - amount);
+        const g = Math.max(0, ((num >> 8) & 0xff) - amount);
+        const b = Math.max(0, (num & 0xff) - amount);
+        return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
+    }
+
+    // Helper: Draw a wheel with spinning spokes
+    _drawWheel(ctx, cx, cy, r = 9) {
+        // Tyre
+        ctx.fillStyle = '#1f2937';
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Rim
+        ctx.fillStyle = '#6b7280';
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Spokes
+        ctx.strokeStyle = '#9ca3af';
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < 5; i++) {
+            const angle = this.wheelRotation + (i * Math.PI * 2 / 5);
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + Math.cos(angle) * r * 0.45, cy + Math.sin(angle) * r * 0.45);
+            ctx.stroke();
+        }
+
+        // Hub
+        ctx.fillStyle = '#374151';
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 0.15, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // SEDAN - Compact car design (scaled for game)
+    _drawSedan(ctx, x, y, color, isBraking) {
+        const scale = 1.2;  // Scale up from original 100x50 to fit game better
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.beginPath();
+        ctx.ellipse(x + 50 * scale, y + 4, 36 * scale, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Body main
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x + 8 * scale, y);
+        ctx.lineTo(x + 8 * scale, y - 12 * scale);
+        ctx.lineTo(x + 14 * scale, y - 12 * scale);
+        ctx.lineTo(x + 18 * scale, y - 24 * scale);
+        ctx.lineTo(x + 55 * scale, y - 24 * scale);
+        ctx.lineTo(x + 62 * scale, y - 14 * scale);
+        ctx.lineTo(x + 88 * scale, y - 14 * scale);
+        ctx.lineTo(x + 92 * scale, y - 10 * scale);
+        ctx.lineTo(x + 92 * scale, y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Lower body stripe
+        ctx.fillStyle = this._darkenColour(color, 25);
+        ctx.fillRect(x + 8 * scale, y - 7 * scale, 84 * scale, 7 * scale);
+
+        // Windows
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(x + 20 * scale, y - 21 * scale);
+        ctx.lineTo(x + 52 * scale, y - 21 * scale);
+        ctx.lineTo(x + 58 * scale, y - 15 * scale);
+        ctx.lineTo(x + 16 * scale, y - 15 * scale);
+        ctx.closePath();
+        ctx.fill();
+
+        // Wheels
+        this._drawWheel(ctx, x + 24 * scale, y, 9 * scale);
+        this._drawWheel(ctx, x + 72 * scale, y, 9 * scale);
+
+        // Headlights
+        ctx.fillStyle = '#fef3c7';
+        ctx.fillRect(x + 87 * scale, y - 12 * scale, 4 * scale, 4 * scale);
+
+        // Brake lights
+        if (isBraking) {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowColor = '#dc2626';
+            ctx.shadowBlur = 15;
+        } else {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowBlur = 0;
+        }
+        ctx.fillRect(x + 9 * scale, y - 11 * scale, 3 * scale, 4 * scale);
+        ctx.shadowBlur = 0;
+    }
+
+    // UTE / PICKUP - Flatdeck truck design (scaled for game)
+    _drawUte(ctx, x, y, color, isBraking) {
+        const scale = 0.9;  // Scale from 140x55 to fit game
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.beginPath();
+        ctx.ellipse(x + 70 * scale, y + 5, 55 * scale, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Flat tray
+        ctx.fillStyle = '#4B5563';
+        ctx.fillRect(x + 8 * scale, y - 10 * scale, 55 * scale, 4 * scale);
+
+        // Cabin
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x + 60 * scale, y);
+        ctx.lineTo(x + 60 * scale, y - 10 * scale);
+        ctx.lineTo(x + 65 * scale, y - 10 * scale);
+        ctx.lineTo(x + 65 * scale, y - 16 * scale);
+        ctx.lineTo(x + 75 * scale, y - 30 * scale);
+        ctx.lineTo(x + 102 * scale, y - 30 * scale);
+        ctx.lineTo(x + 115 * scale, y - 16 * scale);
+        ctx.lineTo(x + 128 * scale, y - 16 * scale);
+        ctx.lineTo(x + 132 * scale, y - 12 * scale);
+        ctx.lineTo(x + 132 * scale, y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Lower body stripe
+        ctx.fillStyle = this._darkenColour(color, 25);
+        ctx.fillRect(x + 60 * scale, y - 8 * scale, 72 * scale, 8 * scale);
+
+        // Windows
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(x + 78 * scale, y - 27 * scale);
+        ctx.lineTo(x + 99 * scale, y - 27 * scale);
+        ctx.lineTo(x + 110 * scale, y - 18 * scale);
+        ctx.lineTo(x + 70 * scale, y - 18 * scale);
+        ctx.closePath();
+        ctx.fill();
+
+        // Wheels
+        this._drawWheel(ctx, x + 28 * scale, y, 10 * scale);
+        this._drawWheel(ctx, x + 105 * scale, y, 10 * scale);
+
+        // Headlights
+        ctx.fillStyle = '#fef3c7';
+        ctx.fillRect(x + 127 * scale, y - 14 * scale, 4 * scale, 5 * scale);
+
+        // Brake lights
+        if (isBraking) {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowColor = '#dc2626';
+            ctx.shadowBlur = 15;
+        } else {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowBlur = 0;
+        }
+        ctx.fillRect(x + 9 * scale, y - 8 * scale, 3 * scale, 4 * scale);
+        ctx.shadowBlur = 0;
+    }
+
+    // VAN - Short wheelbase delivery van (scaled for game)
+    _drawVan(ctx, x, y, color, isBraking) {
+        const scale = 1.05;  // Scale from 115x55 to fit game
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.beginPath();
+        ctx.ellipse(x + 57 * scale, y + 4, 42 * scale, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Body main
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x + 8 * scale, y);
+        ctx.lineTo(x + 8 * scale, y - 32 * scale);
+        ctx.lineTo(x + 98 * scale, y - 32 * scale);
+        ctx.lineTo(x + 102 * scale, y - 28 * scale);
+        ctx.lineTo(x + 102 * scale, y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Lower body stripe
+        ctx.fillStyle = this._darkenColour(color, 20);
+        ctx.fillRect(x + 8 * scale, y - 8 * scale, 94 * scale, 8 * scale);
+
+        // Front window
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(x + 78 * scale, y - 30 * scale);
+        ctx.lineTo(x + 96 * scale, y - 30 * scale);
+        ctx.lineTo(x + 99 * scale, y - 12 * scale);
+        ctx.lineTo(x + 78 * scale, y - 12 * scale);
+        ctx.closePath();
+        ctx.fill();
+
+        // Side window
+        ctx.fillRect(x + 65 * scale, y - 28 * scale, 10 * scale, 10 * scale);
+
+        // Door line
+        ctx.strokeStyle = this._darkenColour(color, 25);
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x + 45 * scale, y - 32 * scale);
+        ctx.lineTo(x + 45 * scale, y - 8 * scale);
+        ctx.stroke();
+
+        // Wheels
+        this._drawWheel(ctx, x + 25 * scale, y, 9 * scale);
+        this._drawWheel(ctx, x + 80 * scale, y, 9 * scale);
+
+        // Headlights
+        ctx.fillStyle = '#fef3c7';
+        ctx.fillRect(x + 97 * scale, y - 24 * scale, 4 * scale, 6 * scale);
+
+        // Brake lights
+        if (isBraking) {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowColor = '#dc2626';
+            ctx.shadowBlur = 15;
+        } else {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowBlur = 0;
+        }
+        ctx.fillRect(x + 9 * scale, y - 28 * scale, 3 * scale, 6 * scale);
+        ctx.shadowBlur = 0;
+    }
+
+    // SUV / 4x4 - Large 4x4 design with roof rack (scaled for game)
+    _drawSuv(ctx, x, y, color, isBraking) {
+        const scale = 0.9;  // Scale from 140x55 to fit game
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.beginPath();
+        ctx.ellipse(x + 70 * scale, y + 5, 52 * scale, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Body main
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x + 8 * scale, y);
+        ctx.lineTo(x + 8 * scale, y - 18 * scale);
+        ctx.lineTo(x + 14 * scale, y - 18 * scale);
+        ctx.lineTo(x + 18 * scale, y - 34 * scale);
+        ctx.lineTo(x + 80 * scale, y - 34 * scale);
+        ctx.lineTo(x + 92 * scale, y - 22 * scale);
+        ctx.lineTo(x + 125 * scale, y - 22 * scale);
+        ctx.lineTo(x + 130 * scale, y - 15 * scale);
+        ctx.lineTo(x + 130 * scale, y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Lower body stripe
+        ctx.fillStyle = this._darkenColour(color, 25);
+        ctx.fillRect(x + 8 * scale, y - 10 * scale, 122 * scale, 10 * scale);
+
+        // Front window
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(x + 22 * scale, y - 31 * scale);
+        ctx.lineTo(x + 50 * scale, y - 31 * scale);
+        ctx.lineTo(x + 50 * scale, y - 22 * scale);
+        ctx.lineTo(x + 16 * scale, y - 22 * scale);
+        ctx.closePath();
+        ctx.fill();
+
+        // Rear window
+        ctx.beginPath();
+        ctx.moveTo(x + 54 * scale, y - 31 * scale);
+        ctx.lineTo(x + 78 * scale, y - 31 * scale);
+        ctx.lineTo(x + 88 * scale, y - 24 * scale);
+        ctx.lineTo(x + 54 * scale, y - 24 * scale);
+        ctx.closePath();
+        ctx.fill();
+
+        // Roof rack
+        ctx.fillStyle = '#6b7280';
+        ctx.fillRect(x + 20 * scale, y - 36 * scale, 60 * scale, 2 * scale);
+
+        // Wheels (larger for SUV)
+        this._drawWheel(ctx, x + 32 * scale, y, 12 * scale);
+        this._drawWheel(ctx, x + 100 * scale, y, 12 * scale);
+
+        // Headlights
+        ctx.fillStyle = '#fef3c7';
+        ctx.fillRect(x + 125 * scale, y - 20 * scale, 4 * scale, 6 * scale);
+
+        // Brake lights
+        if (isBraking) {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowColor = '#dc2626';
+            ctx.shadowBlur = 15;
+        } else {
+            ctx.fillStyle = '#dc2626';
+            ctx.shadowBlur = 0;
+        }
+        ctx.fillRect(x + 9 * scale, y - 16 * scale, 4 * scale, 5 * scale);
+        ctx.shadowBlur = 0;
+    }
+
+    // Main draw vehicle method - dispatches to correct vehicle type
     drawVehicle(speed, isBraking) {
         const ctx = this.ctx;
         const x = this.vehicleScreenX;
         const baseY = this.roadY + 8;
 
-        // Larger vehicle dimensions
-        const vWidth = 120;
-        const vHeight = 55;
-        const drawY = baseY - vHeight;
+        // Get vehicle type and colour from GameState
+        const vehicleType = GameState.selectedVehicle || 'sedan';
+        const vehicleColour = GameState.selectedVehicleColour || '#1F2937';
 
-        // Shadow under car
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-        ctx.beginPath();
-        ctx.ellipse(x + vWidth / 2, baseY, vWidth * 0.45, 8, 0, 0, Math.PI * 2);
-        ctx.fill();
+        // Get which drawing function to use
+        const drawingType = GAME_CONFIG.vehicleDrawingType[vehicleType] || 'sedan';
 
-        // Car body - main
-        const bodyGradient = ctx.createLinearGradient(x, drawY, x, drawY + vHeight);
-        bodyGradient.addColorStop(0, '#4A90D9');
-        bodyGradient.addColorStop(0.5, '#3B82F6');
-        bodyGradient.addColorStop(1, '#2563EB');
-        ctx.fillStyle = bodyGradient;
-        ctx.beginPath();
-        ctx.roundRect(x, drawY + 18, vWidth, vHeight - 18, 10);
-        ctx.fill();
-
-        // Car roof/cabin
-        ctx.fillStyle = '#2563EB';
-        ctx.beginPath();
-        ctx.moveTo(x + 25, drawY + 18);
-        ctx.lineTo(x + 35, drawY);
-        ctx.lineTo(x + vWidth - 25, drawY);
-        ctx.lineTo(x + vWidth - 15, drawY + 18);
-        ctx.closePath();
-        ctx.fill();
-
-        // Windows
-        ctx.fillStyle = '#87CEEB';
-        ctx.beginPath();
-        ctx.moveTo(x + 32, drawY + 16);
-        ctx.lineTo(x + 40, drawY + 4);
-        ctx.lineTo(x + 55, drawY + 4);
-        ctx.lineTo(x + 55, drawY + 16);
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.moveTo(x + 60, drawY + 4);
-        ctx.lineTo(x + vWidth - 30, drawY + 4);
-        ctx.lineTo(x + vWidth - 20, drawY + 16);
-        ctx.lineTo(x + 60, drawY + 16);
-        ctx.closePath();
-        ctx.fill();
-
-        // Side detail line
-        ctx.strokeStyle = '#1E40AF';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(x + 8, drawY + 35);
-        ctx.lineTo(x + vWidth - 8, drawY + 35);
-        ctx.stroke();
-
-        // Wheels
-        const wheelY = baseY - 2;
-        const wheelRadius = 16;
-
-        // Wheel wells (darker arcs)
-        ctx.fillStyle = '#1E3A5F';
-        ctx.beginPath();
-        ctx.arc(x + 28, wheelY, wheelRadius + 4, Math.PI, 0, false);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x + vWidth - 28, wheelY, wheelRadius + 4, Math.PI, 0, false);
-        ctx.fill();
-
-        // Tires
-        ctx.fillStyle = '#1f2937';
-        ctx.beginPath();
-        ctx.arc(x + 28, wheelY, wheelRadius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x + vWidth - 28, wheelY, wheelRadius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Wheel rims
-        ctx.fillStyle = '#9CA3AF';
-        ctx.beginPath();
-        ctx.arc(x + 28, wheelY, wheelRadius * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x + vWidth - 28, wheelY, wheelRadius * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Rim spokes
-        ctx.strokeStyle = '#6B7280';
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 5; i++) {
-            const angle = this.wheelRotation + (i * Math.PI * 2 / 5);
-            const spokeLen = wheelRadius * 0.45;
-
-            ctx.beginPath();
-            ctx.moveTo(x + 28, wheelY);
-            ctx.lineTo(x + 28 + Math.cos(angle) * spokeLen, wheelY + Math.sin(angle) * spokeLen);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(x + vWidth - 28, wheelY);
-            ctx.lineTo(x + vWidth - 28 + Math.cos(angle) * spokeLen, wheelY + Math.sin(angle) * spokeLen);
-            ctx.stroke();
+        // Dispatch to correct drawing function
+        switch (drawingType) {
+            case 'sedan':
+                this._drawSedan(ctx, x, baseY, vehicleColour, isBraking);
+                break;
+            case 'ute':
+                this._drawUte(ctx, x, baseY, vehicleColour, isBraking);
+                break;
+            case 'van':
+                this._drawVan(ctx, x, baseY, vehicleColour, isBraking);
+                break;
+            case 'suv':
+                this._drawSuv(ctx, x, baseY, vehicleColour, isBraking);
+                break;
+            default:
+                this._drawSedan(ctx, x, baseY, vehicleColour, isBraking);
         }
-
-        // Brake lights (when braking)
-        if (isBraking) {
-            ctx.fillStyle = '#EF4444';
-            ctx.shadowColor = '#EF4444';
-            ctx.shadowBlur = 20;
-            ctx.beginPath();
-            ctx.roundRect(x + 2, drawY + 25, 6, 15, 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.roundRect(x + 2, drawY + 45, 6, 10, 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-
-        // Headlights
-        ctx.fillStyle = '#FEF3C7';
-        ctx.shadowColor = '#FEF3C7';
-        ctx.shadowBlur = 12;
-        ctx.beginPath();
-        ctx.roundRect(x + vWidth - 8, drawY + 24, 8, 12, 3);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.roundRect(x + vWidth - 8, drawY + 42, 8, 10, 3);
-        ctx.fill();
-        ctx.shadowBlur = 0;
     }
 
     drawRainEffect(distance, weatherPreset) {
@@ -977,6 +1591,48 @@ class GradeTestRenderer {
 // GAME STATE
 // =====================================================
 
+// =====================================================
+// SAVED RUNS SYSTEM
+// =====================================================
+const SavedRuns = {
+    maxRuns: 5,
+    storageKey: 'tyreSimulatorSavedRuns',
+
+    getRuns() {
+        try {
+            const runs = localStorage.getItem(this.storageKey);
+            return runs ? JSON.parse(runs) : [];
+        } catch (e) {
+            return [];
+        }
+    },
+
+    saveRun(runData) {
+        const runs = this.getRuns();
+        const newRun = {
+            id: Date.now(),
+            timestamp: new Date().toLocaleString(),
+            ...runData
+        };
+        runs.unshift(newRun);
+        // Keep only max runs
+        while (runs.length > this.maxRuns) {
+            runs.pop();
+        }
+        localStorage.setItem(this.storageKey, JSON.stringify(runs));
+        return newRun;
+    },
+
+    deleteRun(id) {
+        const runs = this.getRuns().filter(r => r.id !== id);
+        localStorage.setItem(this.storageKey, JSON.stringify(runs));
+    },
+
+    clearAll() {
+        localStorage.removeItem(this.storageKey);
+    }
+};
+
 const GameState = {
     currentScreen: 'menu',
 
@@ -991,6 +1647,7 @@ const GameState = {
     selectedWidth: 205,           // Standard width
     selectedSurface: 'ASPHALT_STD', // Standard asphalt
     selectedVehicle: 'sedan',     // Standard sedan
+    selectedVehicleColour: '#EF4444', // Default vehicle colour (red for sedan)
     selectedTemp: 20,             // Optimal temperature
     hasABS: true,                 // ABS enabled
 
@@ -1013,14 +1670,27 @@ const GameState = {
     brakeFadeLevel: 0,      // 0-10: brake fade from repeated braking
     tyreCompound: 'touring', // economy, touring, performance, uhp, track
 
+    // New: Terrain Category and Pattern Direction (from TyreCategoriesSourced)
+    // These affect grip based on tyre design vs surface conditions
+    selectedTerrainCategory: 'PC',           // PC, HT, AT, MT, RT, WINTER, ALLSEASON, ALLWEATHER, HP, UHP
+    selectedPatternDirection: 'SYMMETRICAL', // SYMMETRICAL, DIRECTIONAL, ASYMMETRICAL, ASYMMETRICAL_DIRECTIONAL
+
     // Custom water depth (when weather is set to CUSTOM)
     customWaterDepthMm: null, // null = use preset, otherwise 0-5mm
 
     // Physics
     speed: 0,
     maxSpeed: 300,
-    acceleration: 35,
+    acceleration: 10,  // Base acceleration in km/h per second (will be adjusted by vehicle/conditions)
     position: 0,
+
+    // Throttle/Brake state machine (Phase 1 enhancement)
+    // Throttle states: 'RELEASED', 'PRESSED'
+    // Brake states: 'RELEASED', 'PRESSED'
+    // Phase: 'ACCELERATION' (can still accelerate) or 'BRAKING' (committed to stopping)
+    throttleState: 'RELEASED',
+    brakeState: 'RELEASED',
+    drivingPhase: 'ACCELERATION',  // Once 'BRAKING', cannot accelerate again
 
     isAccelerating: false,
     isBraking: false,
@@ -1031,6 +1701,10 @@ const GameState = {
     stoppedDistance: 0,
     testComplete: false,
 
+    // Drivetrain (Phase 2 enhancement)
+    selectedDrivetrain: 'FWD',    // FWD, RWD, AWD
+    selectedDifferential: 'OPEN', // OPEN, LSD
+
     canvas: null,
     renderer: null,
     animationId: null,
@@ -1040,6 +1714,8 @@ const GameState = {
 
     // Physics calculation result (from UltimateBrakingPhysics)
     physicsResult: null,
+    simulatedDecelMs2: 0,     // Deceleration used in simulation (from physics engine)
+    canStopWithBrakes: true,  // Whether brakes can overcome slope
 
     // Stats tracking
     stats: {
@@ -1064,6 +1740,377 @@ const GameState = {
 // PHYSICS CALCULATIONS - FULL ENGINE INTEGRATION
 // Now uses UltimateBrakingPhysics v3.4.3 with ALL 15 factors
 // =====================================================
+
+/**
+ * Calculate realistic acceleration based on vehicle type, conditions, and tyre grip
+ * Returns acceleration in km/h per second
+ *
+ * Real-world 0-100 km/h reference times:
+ * - Hatchback (1200kg): ~12-14 seconds = ~7-8 km/h/s
+ * - Sedan (1500kg): ~9-11 seconds = ~9-11 km/h/s
+ * - SUV (2000kg): ~10-12 seconds = ~8-10 km/h/s
+ * - Truck (2500kg): ~12-15 seconds = ~7-8 km/h/s
+ *
+ * Factors that affect acceleration:
+ * 1. Vehicle weight (power-to-weight ratio)
+ * 2. Surface traction (can't accelerate faster than grip allows)
+ * 3. Tyre conditions (tread, age, pressure)
+ * 4. Weather/water depth
+ * 5. Slope (uphill = slower, downhill = faster)
+ * 6. Speed-dependent air resistance
+ * 7. Trailer load
+ */
+function calculateRealisticAcceleration() {
+    // Base acceleration by vehicle type (km/h per second at optimal conditions)
+    // These produce realistic 0-100 times when integrated
+    const vehicleAcceleration = {
+        'motorcycle': 15.0, // 0-100 in ~6-7 seconds (sportbike)
+        'citycar': 7.0,     // 0-100 in ~14 seconds
+        'hatchback': 8.5,   // 0-100 in ~12 seconds
+        'sedan': 10.0,      // 0-100 in ~10 seconds
+        'wagon': 9.5,       // 0-100 in ~10.5 seconds
+        'coupe': 12.0,      // 0-100 in ~8 seconds (sports)
+        'suv_compact': 8.5, // 0-100 in ~12 seconds
+        'suv': 9.0,         // 0-100 in ~11 seconds
+        'suv_large': 8.0,   // 0-100 in ~12.5 seconds
+        'pickup': 8.0,      // 0-100 in ~12.5 seconds
+        'van': 7.5,         // 0-100 in ~13 seconds
+        'truck': 6.5        // 0-100 in ~15 seconds
+    };
+
+    const vehicleData = GAME_CONFIG.vehicles[GameState.selectedVehicle] || GAME_CONFIG.vehicles['sedan'];
+    let baseAccel = vehicleAcceleration[GameState.selectedVehicle] || 10.0;
+
+    // 1. Surface traction limit - can't accelerate faster than tyres can grip
+    // Max acceleration = μ * g (converted to km/h/s: multiply by 3.6)
+    const surfaceData = GAME_CONFIG.surfaces[GameState.selectedSurface] || GAME_CONFIG.surfaces['ASPHALT_STD'];
+    const waterDepths = { 'DRY': 0, 'DAMP': 0.1, 'LIGHT_RAIN': 0.3, 'RAIN': 0.7, 'HEAVY_RAIN': 1.5 };
+    const waterMm = waterDepths[GameState.selectedWeather] || 0;
+    const isDry = waterMm <= 0;
+
+    let surfaceMu = isDry ? surfaceData.baseMu : surfaceData.wetMu;
+
+    // Weather reduces grip
+    let weatherFactor = 1.0;
+    if (waterMm > 0) {
+        if (waterMm <= 0.2) weatherFactor = 0.95;
+        else if (waterMm <= 0.5) weatherFactor = 0.85;
+        else if (waterMm <= 1.0) weatherFactor = 0.75;
+        else weatherFactor = 0.60;
+    }
+    surfaceMu *= weatherFactor;
+
+    // Max traction-limited acceleration (in km/h per second)
+    const maxTractionAccel = surfaceMu * GRAVITY * 3.6;
+
+    // Can't accelerate faster than traction allows
+    baseAccel = Math.min(baseAccel, maxTractionAccel);
+
+    // 2. Tread depth affects traction (especially in wet)
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
+    let treadFactor = 1.0;
+    if (!isDry) {
+        // In wet, low tread severely limits traction
+        if (treadMm >= 8) treadFactor = 1.0;
+        else if (treadMm >= 4) treadFactor = 0.7 + (treadMm - 4) * 0.075;
+        else if (treadMm >= 1.6) treadFactor = 0.4 + (treadMm - 1.6) * 0.125;
+        else treadFactor = 0.3;
+    } else {
+        // Dry: minimal effect
+        treadFactor = 0.95 + (treadMm / 8) * 0.05;
+    }
+    baseAccel *= treadFactor;
+
+    // 3. Tyre age reduces grip
+    const ageYears = GameState.selectedAge || 0;
+    let ageFactor = 1.0;
+    if (ageYears > 0) {
+        ageFactor = Math.max(0.5, 1.0 - (ageYears * 0.03));
+    }
+    baseAccel *= ageFactor;
+
+    // 4. Pressure deviation reduces grip
+    const optimalPsi = 32;
+    const deviation = Math.abs(GameState.selectedPressure - optimalPsi);
+    let pressureFactor = Math.max(0.8, 1.0 - (deviation * 0.01));
+    baseAccel *= pressureFactor;
+
+    // 5. Slope effect (uphill = harder, downhill = easier)
+    const slopeDeg = GameState.slopeDegrees || 0;
+    const slopeRad = (slopeDeg * Math.PI) / 180;
+    // Gravity component: adds to acceleration going downhill, subtracts going uphill
+    const gravityComponent = -Math.sin(slopeRad) * GRAVITY * 3.6;
+    baseAccel += gravityComponent;
+
+    // 6. Air resistance increases with speed squared (reduces effective acceleration)
+    const speedKmh = GameState.speed;
+    const airDragFactor = 1.0 - Math.min(0.5, (speedKmh / 200) * (speedKmh / 200) * 0.5);
+    baseAccel *= airDragFactor;
+
+    // 7. Trailer reduces acceleration significantly
+    if (GameState.trailerType !== 'none' && GameState.trailerWeight > 0) {
+        const totalWeight = (GameState.vehicleWeight || vehicleData.weight) + GameState.trailerWeight;
+        const baseWeight = GameState.vehicleWeight || vehicleData.weight;
+        const trailerDrag = baseWeight / totalWeight;
+        baseAccel *= trailerDrag;
+    }
+
+    // 8. Temperature affects tyre grip
+    const temp = GameState.selectedTemp !== undefined ? GameState.selectedTemp : 20;
+    let tempFactor = 1.0;
+    if (temp < 7) {
+        // Cold tyres have less grip
+        if (GameState.selectedTyreType === 'summer') {
+            tempFactor = 0.7 + (temp / 7) * 0.3;
+        } else if (GameState.selectedTyreType === 'allseason') {
+            tempFactor = 0.85 + (temp / 7) * 0.15;
+        } else {
+            // Winter tyres work well in cold
+            tempFactor = 1.0;
+        }
+    } else if (temp > 35) {
+        // Hot road can be slippery
+        tempFactor = Math.max(0.9, 1.0 - (temp - 35) * 0.005);
+    }
+    baseAccel *= tempFactor;
+
+    // 9. Terrain Category and Pattern Direction modifiers (from TyreCategoriesSourced)
+    // These affect traction based on tyre design vs current surface/conditions
+    if (typeof TyreCategoriesSourced !== 'undefined') {
+        // Map surface to physics engine format
+        const surfaceMap = {
+            'ASPHALT_STD': 'ASPHALT_STD',
+            'CONCRETE': 'CONCRETE_STD',
+            'GRAVEL': 'GRAVEL_LOOSE',
+            'DIRT': 'DIRT_LOOSE',
+            'MUD': 'MUD',
+            'GRASS': 'GRASS_DRY',
+            'SAND': 'SAND',
+            'SNOW': 'SNOW_PACKED',
+            'ICE': 'ICE_SMOOTH'
+        };
+        const mappedSurface = surfaceMap[GameState.selectedSurface] || 'ASPHALT_STD';
+
+        // Get combined modifier from terrain category + pattern direction
+        const modifiers = TyreCategoriesSourced.getCombinedModifier(
+            GameState.selectedTerrainCategory,
+            GameState.selectedPatternDirection,
+            mappedSurface,
+            !isDry  // isWet
+        );
+
+        // Acceleration is proportional to available traction
+        // Higher grip (modifier > 1) = better acceleration
+        // Lower grip (modifier < 1) = wheelspin/reduced acceleration
+        if (modifiers.combinedModifier !== 1.0) {
+            baseAccel *= modifiers.combinedModifier;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 10. PHASE 2: Weight Transfer & Drivetrain Physics
+    // ═══════════════════════════════════════════════════════════════════════
+    // During acceleration, weight transfers to rear wheels:
+    //   - FWD: Front tyres lose grip (weight on rear, drive on front)
+    //   - RWD: Rear tyres gain grip (weight + drive on rear)
+    //   - AWD: Split effect, better overall
+    //
+    // Weight transfer formula (simplified):
+    //   ΔW = (m * a * h) / L
+    //   where h = CG height (~0.5m), L = wheelbase (~2.6m)
+    //   At 0.5g accel: ΔW ≈ 10% weight shift
+    // ═══════════════════════════════════════════════════════════════════════
+
+    const drivetrain = vehicleData.drivetrain || GameState.selectedDrivetrain || 'FWD';
+    const differential = vehicleData.differential || GameState.selectedDifferential || 'OPEN';
+
+    // Calculate weight transfer factor based on current acceleration
+    // Higher current speed/acceleration = more weight transfer
+    const accelG = baseAccel / 35.3; // Convert km/h/s to g (35.3 km/h/s ≈ 1g)
+    const weightTransferRatio = Math.min(0.15, accelG * 0.10); // Max 15% weight transfer
+
+    let drivetrainFactor = 1.0;
+
+    if (drivetrain === 'FWD') {
+        // FWD loses traction during acceleration (weight shifts away from drive wheels)
+        // At high acceleration attempts, front wheels can spin
+        drivetrainFactor = 1.0 - weightTransferRatio * 0.8; // Lose up to 12% grip
+    } else if (drivetrain === 'RWD') {
+        // RWD gains traction during acceleration (weight shifts to drive wheels)
+        // Better acceleration traction but can be twitchy
+        drivetrainFactor = 1.0 + weightTransferRatio * 0.5; // Gain up to 7.5% grip
+    } else if (drivetrain === 'AWD') {
+        // AWD distributes power to all wheels - minimal weight transfer penalty
+        // Typically 60/40 or 50/50 split
+        drivetrainFactor = 1.0 - weightTransferRatio * 0.2; // Lose only ~3% grip
+    }
+
+    // Differential affects power distribution efficiency
+    // Open diff: if one wheel slips, you lose that axle
+    // LSD: maintains traction even when one wheel slips
+    let diffFactor = 1.0;
+    if (differential === 'OPEN') {
+        // Open diff - more likely to spin a wheel, reducing effective traction
+        // Especially on uneven surfaces or in wet
+        const surfacePenalty = isDry ? 0.95 : 0.85;
+        diffFactor = surfacePenalty;
+    } else if (differential === 'LSD') {
+        // Limited slip - maintains traction better
+        const surfaceBonus = isDry ? 1.0 : 0.95;
+        diffFactor = surfaceBonus;
+    }
+
+    baseAccel *= drivetrainFactor * diffFactor;
+
+    // Ensure we don't go negative (unless on very steep uphill)
+    // and cap at a reasonable maximum (about 1g = ~35 km/h/s for sports cars)
+    return Math.max(-5, Math.min(25, baseAccel));
+}
+
+/**
+ * Calculate coasting deceleration when throttle is released (engine braking mode)
+ * Returns deceleration in km/h per second (positive = slowing down)
+ *
+ * Coasting deceleration comes from:
+ * 1. Engine braking (compression resistance) - dominant at low speeds
+ * 2. Rolling resistance - fairly constant
+ * 3. Aerodynamic drag - increases with speed squared
+ * 4. Slope effect - uphill adds, downhill subtracts
+ *
+ * Real-world coasting deceleration:
+ * - Low gear (manual): 3-5 km/h/s engine braking
+ * - High gear/auto: 1-2 km/h/s engine braking
+ * - Rolling resistance: ~0.3-0.5 km/h/s
+ * - Aero at 100 km/h: ~0.8-1.2 km/h/s
+ */
+function calculateCoastingDeceleration() {
+    const speed = GameState.speed;
+
+    // Base engine braking - simulates automatic transmission (lower than manual)
+    // Decreases at higher speeds (engine spins freely)
+    const engineBrakingBase = 1.5; // km/h/s at low speed
+    const engineBraking = engineBrakingBase * Math.max(0.3, 1 - speed / 200);
+
+    // Rolling resistance - fairly constant, slight increase with speed
+    // Affected by surface type - now uses rollingFactor from GAME_CONFIG
+    const surfaceData = GAME_CONFIG.surfaces[GameState.selectedSurface] || GAME_CONFIG.surfaces['ASPHALT_STD'];
+    const rollingFactor = surfaceData.rollingFactor || 1.0;
+    const rollingResistance = 0.4 * rollingFactor;
+
+    // Aerodynamic drag - proportional to v^2
+    // At 100 km/h, drag causes ~1 km/h/s deceleration for a sedan
+    const vehicleData = GAME_CONFIG.vehicles[GameState.selectedVehicle] || GAME_CONFIG.vehicles['sedan'];
+    const dragCoefficients = {
+        'motorcycle': 0.60,
+        'citycar': 0.32,
+        'hatchback': 0.35,
+        'sedan': 0.30,
+        'wagon': 0.32,
+        'coupe': 0.28,
+        'suv_compact': 0.38,
+        'suv': 0.40,
+        'suv_large': 0.42,
+        'pickup': 0.45,
+        'van': 0.40,
+        'truck': 0.50
+    };
+    const Cd = dragCoefficients[GameState.selectedVehicle] || 0.30;
+    const aeroDrag = Cd * Math.pow(speed / 100, 2) * 1.0; // ~1 km/h/s at 100 for Cd=0.30
+
+    // Wind effect
+    let windEffect = 0;
+    if (GameState.windSpeed > 0) {
+        const windFactor = GameState.windSpeed / 50; // Normalize to 0-2
+        if (GameState.windDirection === 'headwind') {
+            windEffect = 0.3 * windFactor; // Headwind adds drag
+        } else if (GameState.windDirection === 'tailwind') {
+            windEffect = -0.2 * windFactor; // Tailwind reduces drag
+        }
+    }
+
+    // Slope effect (degrees to deceleration)
+    // sin(slope) * g * 3.6 = km/h/s change
+    const slopeRad = (GameState.slopeDegrees || 0) * Math.PI / 180;
+    const slopeEffect = Math.sin(slopeRad) * 9.81 * 3.6; // Positive uphill = adds deceleration
+
+    // Trailer effect - adds rolling resistance
+    let trailerDrag = 0;
+    if (GameState.trailerType !== 'none' && GameState.trailerWeight > 0) {
+        // Trailer increases rolling resistance but adds momentum
+        trailerDrag = 0.2 * (GameState.trailerWeight / 1000);
+    }
+
+    // Total coasting deceleration
+    const totalDecel = engineBraking + rollingResistance + aeroDrag + windEffect + slopeEffect + trailerDrag;
+
+    // Can be negative on steep downhill (vehicle accelerates)
+    return totalDecel;
+}
+
+/**
+ * Calculate brake release coasting deceleration
+ * When brake is released but not accelerating (Phase 1 enhancement)
+ * This is LESS than full braking but MORE than throttle-off coasting
+ *
+ * Real-world: Taking foot off brake while moving results in:
+ * - No engine braking (not in gear)
+ * - Rolling resistance only
+ * - Aerodynamic drag
+ * - Much slower deceleration than full braking (~0.5-2 km/h/s vs 15-30 km/h/s)
+ */
+function calculateBrakeReleaseDeceleration() {
+    const speed = GameState.speed;
+
+    // No engine braking when brake released (coasting in neutral effectively)
+    const engineBraking = 0.3; // Minimal - just transmission drag
+
+    // Rolling resistance - uses rollingFactor from GAME_CONFIG
+    const surfaceData = GAME_CONFIG.surfaces[GameState.selectedSurface] || GAME_CONFIG.surfaces['ASPHALT_STD'];
+    const rollingFactor = surfaceData.rollingFactor || 1.0;
+    const rollingResistance = 0.4 * rollingFactor;
+
+    // Aerodynamic drag - varies by vehicle type
+    const dragCoefficients = {
+        'motorcycle': 0.60,
+        'citycar': 0.32,
+        'hatchback': 0.35,
+        'sedan': 0.30,
+        'wagon': 0.32,
+        'coupe': 0.28,
+        'suv_compact': 0.38,
+        'suv': 0.40,
+        'suv_large': 0.42,
+        'pickup': 0.45,
+        'van': 0.40,
+        'truck': 0.50
+    };
+    const Cd = dragCoefficients[GameState.selectedVehicle] || 0.30;
+    const aeroDrag = Cd * Math.pow(speed / 100, 2) * 1.0;
+
+    // Wind effect
+    let windEffect = 0;
+    if (GameState.windSpeed > 0) {
+        const windFactor = GameState.windSpeed / 50;
+        if (GameState.windDirection === 'headwind') {
+            windEffect = 0.3 * windFactor;
+        } else if (GameState.windDirection === 'tailwind') {
+            windEffect = -0.2 * windFactor;
+        }
+    }
+
+    // Slope effect
+    const slopeRad = (GameState.slopeDegrees || 0) * Math.PI / 180;
+    const slopeEffect = Math.sin(slopeRad) * 9.81 * 3.6;
+
+    // Trailer rolling resistance
+    let trailerDrag = 0;
+    if (GameState.trailerType !== 'none' && GameState.trailerWeight > 0) {
+        trailerDrag = 0.2 * (GameState.trailerWeight / 1000);
+    }
+
+    // Total - slightly less than full coasting (no engine braking)
+    return engineBraking + rollingResistance + aeroDrag + windEffect + slopeEffect + trailerDrag;
+}
 
 /**
  * Calculate braking distance using the FULL physics engine
@@ -1156,14 +2203,39 @@ function calculateBrakingDistance(speedKmh, grade, treadMm, weatherPreset, ageYe
             brakingDistance *= (1 + windFactor * speedFactor);
         }
 
-        // Apply trailer braking penalty (partially handled by loadedMassKg, but braking factor needs adjustment)
+        // Apply trailer brake-coverage physics (Fix v3.5.1)
+        // Distance increases by 1/brakeCoverage since d ∝ 1/a and a ∝ brakeCoverage
         if (trailerType !== 'none' && trailerWeight > 0) {
             const trailerData = GAME_CONFIG.trailer.types[trailerType] || GAME_CONFIG.trailer.types['unbraked'];
-            // Additional penalty for unbraked trailers (physics engine handles mass, not braking contribution)
-            const brakingDeficit = 1 - trailerData.brakingFactor;
-            const trailerMassRatio = trailerWeight / effectiveVehicleWeight;
-            const extraPenalty = trailerMassRatio * brakingDeficit * 0.5;
-            brakingDistance *= (1 + extraPenalty);
+            const b = trailerData.brakingFactor; // 0..1
+            const mv = effectiveVehicleWeight;
+            const mt = trailerWeight;
+            const brakeCoverage = (mv + b * mt) / (mv + mt);
+            brakingDistance /= brakeCoverage; // Distance inversely proportional to deceleration
+        }
+
+        // Apply Terrain Category and Pattern Direction modifiers (from TyreCategoriesSourced)
+        // These affect grip based on tyre design vs current surface/conditions
+        if (typeof TyreCategoriesSourced !== 'undefined') {
+            // Determine if conditions are wet
+            const waterDepths = { 'DRY': 0, 'CLOUDY': 0, 'OVERCAST': 0, 'DAMP': 0.1, 'LIGHT_RAIN': 0.3, 'RAIN': 0.7, 'HEAVY_RAIN': 1.5, 'SLEET': 0.8 };
+            const waterMm = GameState.customWaterDepthMm !== null ? GameState.customWaterDepthMm : (waterDepths[weatherPreset] || 0);
+            const isWet = waterMm > 0;
+
+            // Get combined modifier from terrain category + pattern direction
+            const modifiers = TyreCategoriesSourced.getCombinedModifier(
+                GameState.selectedTerrainCategory,
+                GameState.selectedPatternDirection,
+                mappedSurface,
+                isWet
+            );
+
+            // Distance is inversely proportional to grip
+            // Higher grip (modifier > 1) = shorter distance
+            // Lower grip (modifier < 1) = longer distance
+            if (modifiers.combinedModifier !== 1.0) {
+                brakingDistance /= modifiers.combinedModifier;
+            }
         }
 
         return brakingDistance;
@@ -1819,6 +2891,30 @@ function setupEventListeners() {
         });
     });
 
+    // Terrain category selection (from TyreCategoriesSourced)
+    document.querySelectorAll('.terrain-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.terrain-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            GameState.selectedTerrainCategory = btn.dataset.terrain;
+            const label = btn.querySelector('.terrain-label')?.textContent || btn.dataset.terrain;
+            updateSectionValueBadge(btn.closest('.selection-section'), label);
+            updateAllInfo();
+        });
+    });
+
+    // Pattern direction selection (from TyreCategoriesSourced)
+    document.querySelectorAll('.pattern-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.pattern-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            GameState.selectedPatternDirection = btn.dataset.pattern;
+            const label = btn.querySelector('.pattern-label')?.textContent || btn.dataset.pattern;
+            updateSectionValueBadge(btn.closest('.selection-section'), label);
+            updateAllInfo();
+        });
+    });
+
     // Pressure slider
     const pressureSlider = document.getElementById('pressure-slider');
     if (pressureSlider) {
@@ -1897,6 +2993,12 @@ function setupEventListeners() {
                 GameState.vehicleWeight = vehicleData.weight;
                 const weightInput = document.getElementById('vehicle-weight-input');
                 if (weightInput) weightInput.value = vehicleData.weight;
+            }
+            // Set default colour for this vehicle type (first colour in array)
+            const drawingType = GAME_CONFIG.vehicleDrawingType[btn.dataset.vehicle] || 'sedan';
+            const vehicleColours = GAME_CONFIG.vehicleColours[drawingType] || GAME_CONFIG.vehicleColours['default'];
+            if (vehicleColours && vehicleColours.length > 0) {
+                GameState.selectedVehicleColour = vehicleColours[0];
             }
             updateAllInfo();
         });
@@ -2064,14 +3166,39 @@ function setupEventListeners() {
         });
     }
 
-    // Brake button click handler
+    // Brake button handler - hold to brake, release to coast
     const brakeBtn = document.getElementById('brake-btn');
     if (brakeBtn) {
-        brakeBtn.addEventListener('click', triggerBrake);
+        // Mouse events - hold brake button to brake
+        brakeBtn.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            triggerBrake();
+        });
+        brakeBtn.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            releaseBrake();
+        });
+        brakeBtn.addEventListener('mouseleave', (e) => {
+            // Only release if we're in braking phase (prevents accidental release)
+            if (GameState.drivingPhase === 'BRAKING') {
+                releaseBrake();
+            }
+        });
+
+        // Touch events for mobile
         brakeBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
             e.stopPropagation();
             triggerBrake();
+        });
+        brakeBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            releaseBrake();
+        });
+        brakeBtn.addEventListener('touchcancel', (e) => {
+            e.preventDefault();
+            releaseBrake();
         });
     }
 
@@ -2081,14 +3208,19 @@ function setupEventListeners() {
 }
 
 function startAccelerating() {
-    if (GameState.currentScreen !== 'game' || GameState.testComplete || GameState.isBraking) return;
+    // Cannot accelerate if in braking phase, test complete, or already braking
+    if (GameState.currentScreen !== 'game' || GameState.testComplete) return;
+    if (GameState.drivingPhase === 'BRAKING') return; // Once braking phase, no more acceleration
+
     GameState.isAccelerating = true;
+    GameState.throttleState = 'PRESSED';
     const accelBtn = document.getElementById('accel-btn');
     if (accelBtn) accelBtn.classList.add('active');
 }
 
 function stopAccelerating() {
     GameState.isAccelerating = false;
+    GameState.throttleState = 'RELEASED';
     const accelBtn = document.getElementById('accel-btn');
     if (accelBtn) accelBtn.classList.remove('active');
 }
@@ -2346,7 +3478,7 @@ function updateTempDisplay() {
 
 function updateAllInfo() {
     const grade = GameState.selectedGrade;
-    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
     const weather = GameState.selectedWeather;
     const age = GameState.selectedAge;
     const tyreType = GameState.selectedTyreType;
@@ -2480,8 +3612,27 @@ function resetGameState() {
     GameState.testComplete = false;
     GameState.markers = [];
     GameState.physicsResult = null;
+    GameState.simulatedDecelMs2 = 0;
+    GameState.canStopWithBrakes = true;
     GameState.cannotStop = false;
     GameState.cannotStopWarned = false;
+
+    // Phase 1: Reset throttle/brake state machine
+    GameState.throttleState = 'RELEASED';
+    GameState.brakeState = 'RELEASED';
+    GameState.drivingPhase = 'ACCELERATION';
+
+    // Debug: Log expected acceleration at start
+    const testAccel = calculateRealisticAcceleration();
+    const vehicleData = GAME_CONFIG.vehicles[GameState.selectedVehicle] || GAME_CONFIG.vehicles['sedan'];
+    console.log('='.repeat(60));
+    console.log('[DEBUG] Game Reset - Acceleration Parameters:');
+    console.log(`  Vehicle: ${GameState.selectedVehicle} (${vehicleData.weight}kg)`);
+    console.log(`  Surface: ${GameState.selectedSurface}`);
+    console.log(`  Weather: ${GameState.selectedWeather}`);
+    console.log(`  Base acceleration: ${testAccel.toFixed(2)} km/h/s`);
+    console.log(`  Expected 0-100: ~${(100/testAccel).toFixed(1)} seconds`);
+    console.log('='.repeat(60));
 
     GameState.stats = {
         startTime: performance.now(),
@@ -2543,17 +3694,38 @@ function handleKeyDown(e) {
         e.preventDefault();
         startAccelerating();
     }
+
+    // 'B' key or 'Enter' to brake (hold to brake, release to coast)
+    if (e.code === 'KeyB' || e.code === 'Enter') {
+        e.preventDefault();
+        triggerBrake();
+    }
 }
 
 function handleKeyUp(e) {
     if (e.code === 'Space') {
         stopAccelerating();
     }
+
+    // Release brake key -> coast in braking phase
+    if (e.code === 'KeyB' || e.code === 'Enter') {
+        releaseBrake();
+    }
 }
 
 function triggerBrake() {
     // Can brake at any speed > 0
-    if (GameState.isBraking || GameState.speed <= 0) return;
+    if (GameState.speed <= 0) return;
+
+    // If already in braking phase but brake released, pressing again resumes braking
+    if (GameState.drivingPhase === 'BRAKING' && GameState.brakeState === 'RELEASED') {
+        GameState.brakeState = 'PRESSED';
+        GameState.isBraking = true;
+        return;
+    }
+
+    // First time pressing brake - enter braking phase
+    if (GameState.isBraking) return;
 
     // Hide game controls
     const gameControls = document.querySelector('.game-controls');
@@ -2566,18 +3738,42 @@ function triggerBrake() {
     startBraking();
 }
 
+/**
+ * Release the brake pedal (Phase 1 enhancement)
+ * Vehicle will coast with rolling resistance + drag only
+ * User can press brake again to resume full braking
+ */
+function releaseBrake() {
+    // FIX: Once braking starts, keep braking until stopped
+    // This gives intuitive "click to brake" behavior instead of "hold to brake"
+    // The old behavior was confusing - users would click and release, then coast at 0.7 km/h/s
+    // New behavior: clicking brake commits to full braking until stopped
+
+    // Do nothing - brake stays engaged until test completes
+    // This makes the game behavior match the physics predictions
+    return;
+
+    // OLD CODE (hold-to-brake):
+    // if (GameState.drivingPhase !== 'BRAKING' || GameState.testComplete) return;
+    // GameState.brakeState = 'RELEASED';
+    // GameState.isBraking = false;
+}
+
 function startBraking() {
     GameState.isBraking = true;
+    GameState.brakeState = 'PRESSED';
+    GameState.drivingPhase = 'BRAKING'; // Commit to braking phase - no more acceleration
     GameState.hasReleasedAccelerator = true;
     GameState.brakeSpeed = GameState.speed;
     GameState.brakePosition = GameState.position;
+    GameState.cannotStopWarned = false;
 
     const stats = GameState.stats;
     stats.brakeStartTime = performance.now();
     stats.accelerationDistance = GameState.position;
 
     // Get full physics result for this braking scenario
-    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
     GameState.physicsResult = getFullPhysicsResult(
         GameState.brakeSpeed,
         GameState.selectedGrade,
@@ -2586,12 +3782,59 @@ function startBraking() {
         GameState.selectedAge
     );
 
+    // Store the deceleration from the physics engine for use in the update loop
+    // This ensures the simulation matches the displayed prediction exactly
+    if (GameState.physicsResult) {
+        let decelMs2 = GameState.physicsResult.decelerationMs2;
+
+        // Apply wind effect (not in physics engine)
+        if (GameState.windSpeed > 0) {
+            const windEffects = { 'headwind': 0.02, 'crosswind': 0, 'tailwind': -0.02 };
+            const windEffect = windEffects[GameState.windDirection] || 0;
+            const speedFactor = Math.min(1.0, GameState.brakeSpeed / 100);
+            decelMs2 *= (1 + windEffect * (GameState.windSpeed / 50) * speedFactor);
+        }
+
+        // Apply trailer effect using brake-coverage physics (Fix v3.5.1)
+        // ─────────────────────────────────────────────────────────────
+        // Physics: F_max = μg*cos(θ) * (m_vehicle + b*m_trailer)
+        //          a = F_max / (m_vehicle + m_trailer) + g*sin(θ)
+        //
+        // Where b = trailer braking factor (0 = unbraked, 1 = fully braked)
+        // This correctly models:
+        //   - b=1: trailer mass cancels out (friction-limited braking)
+        //   - b=0: decel drops as trailer mass increases (less braking force per kg)
+        // ─────────────────────────────────────────────────────────────
+        if (GameState.trailerType !== 'none' && GameState.trailerWeight > 0) {
+            const trailerData = GAME_CONFIG.trailer.types[GameState.trailerType] || GAME_CONFIG.trailer.types['unbraked'];
+            const b = trailerData.brakingFactor || 0.70; // 0..1, default to unbraked
+            const vehicleData = GAME_CONFIG.vehicles[GameState.selectedVehicle] || GAME_CONFIG.vehicles['sedan'];
+            const mv = GameState.vehicleWeight || vehicleData.weight;
+            const mt = GameState.trailerWeight;
+
+            // Brake coverage ratio: how much of total mass can be braked
+            const brakeCoverage = (mv + b * mt) / (mv + mt);
+
+            // Apply to deceleration (friction component only, not gravity)
+            // Since decelMs2 = g*(μ*cos(θ) + sin(θ)), we scale only the μ*cos(θ) part
+            // Approximation: scale entire decel by brake coverage (close enough for most cases)
+            decelMs2 *= brakeCoverage;
+        }
+
+        GameState.simulatedDecelMs2 = decelMs2;
+        GameState.canStopWithBrakes = decelMs2 > 0;
+    } else {
+        // Fallback if physics engine not available
+        GameState.simulatedDecelMs2 = 7.0; // ~0.7g default
+        GameState.canStopWithBrakes = true;
+    }
+
     calculateComparisonMarkers();
 }
 
 function calculateComparisonMarkers() {
     const grades = ['A', 'B', 'C', 'D', 'E'];
-    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
 
     GameState.markers = [];
 
@@ -2689,227 +3932,115 @@ function update(dt) {
         });
     }
 
-    // Acceleration - user can keep accelerating even after brake button appears
-    if (GameState.isAccelerating && !GameState.isBraking) {
-        if (!stats.wasAccelerating) {
-            stats.wasAccelerating = true;
-            if (stats.firstAccelTime === 0) {
-                stats.firstAccelTime = now;
-                stats.accelerationStartTime = now;
+    // ═══════════════════════════════════════════════════════════════════════
+    // PHASE 1 ENHANCEMENT: State Machine-based Physics
+    // ═══════════════════════════════════════════════════════════════════════
+    // States:
+    //   drivingPhase: 'ACCELERATION' or 'BRAKING'
+    //   throttleState: 'PRESSED' or 'RELEASED'
+    //   brakeState: 'PRESSED' or 'RELEASED'
+    //
+    // Behavior:
+    //   ACCELERATION phase + throttle PRESSED  -> Full acceleration
+    //   ACCELERATION phase + throttle RELEASED -> Engine braking (coasting)
+    //   BRAKING phase + brake PRESSED          -> Full braking (physics engine)
+    //   BRAKING phase + brake RELEASED         -> Gentle coasting (rolling only)
+    // ═══════════════════════════════════════════════════════════════════════
+
+    if (GameState.drivingPhase === 'ACCELERATION') {
+        // ─────────────────────────────────────────────────────────────────
+        // ACCELERATION PHASE
+        // ─────────────────────────────────────────────────────────────────
+
+        if (GameState.throttleState === 'PRESSED' && GameState.isAccelerating) {
+            // Full acceleration - throttle pressed
+            if (!stats.wasAccelerating) {
+                stats.wasAccelerating = true;
+                if (stats.firstAccelTime === 0) {
+                    stats.firstAccelTime = now;
+                    stats.accelerationStartTime = now;
+                }
+            }
+
+            const effectiveAccel = calculateRealisticAcceleration();
+
+            // Debug logging (every 500ms to avoid console spam)
+            if (!GameState._lastAccelLog || now - GameState._lastAccelLog > 500) {
+                console.log(`[ACCEL] Speed: ${GameState.speed.toFixed(1)} km/h | Accel: ${effectiveAccel.toFixed(2)} km/h/s | dt: ${(dt*1000).toFixed(1)}ms | Δv: ${(effectiveAccel * dt).toFixed(3)} km/h`);
+                GameState._lastAccelLog = now;
+            }
+
+            GameState.speed += effectiveAccel * dt;
+
+            if (GameState.speed > GameState.maxSpeed) {
+                GameState.speed = GameState.maxSpeed;
+            }
+
+            if (GameState.speed > stats.peakSpeed) {
+                stats.peakSpeed = GameState.speed;
+                stats.timeToTopSpeed = (now - stats.firstAccelTime) / 1000;
+                stats.distanceToTopSpeed = GameState.position;
+            }
+
+        } else if (GameState.throttleState === 'RELEASED' && GameState.speed > 0) {
+            // Coasting - throttle released during acceleration phase
+            // Apply engine braking + rolling resistance + drag
+            const coastingDecel = calculateCoastingDeceleration();
+            GameState.speed -= coastingDecel * dt;
+
+            // Don't go below 0
+            if (GameState.speed < 0) {
+                GameState.speed = 0;
             }
         }
 
-        GameState.speed += GameState.acceleration * dt;
-        if (GameState.speed > GameState.maxSpeed) {
-            GameState.speed = GameState.maxSpeed;
+        // Brake is ready once moving
+        if (GameState.speed > 0 && !GameState.brakeReady) {
+            GameState.brakeReady = true;
         }
 
-        if (GameState.speed > stats.peakSpeed) {
-            stats.peakSpeed = GameState.speed;
-            stats.timeToTopSpeed = (now - stats.firstAccelTime) / 1000;
-            stats.distanceToTopSpeed = GameState.position;
-        }
-    }
+    } else if (GameState.drivingPhase === 'BRAKING') {
+        // ─────────────────────────────────────────────────────────────────
+        // BRAKING PHASE - cannot accelerate anymore
+        // ─────────────────────────────────────────────────────────────────
 
-    // Brake is always ready once moving (any speed works)
-    if (GameState.speed > 0 && !GameState.brakeReady && !GameState.isBraking) {
-        GameState.brakeReady = true;
-    }
+        if (GameState.brakeState === 'PRESSED' && GameState.speed > 0) {
+            // Full braking - use physics engine deceleration
+            const decelerationMs2 = GameState.simulatedDecelMs2 || 7.0;
+            const decelerationKmhPerSec = decelerationMs2 * 3.6;
 
-    // Braking physics - calculate deceleration based on friction (v3.4.3)
-    if (GameState.isBraking && GameState.speed > 0) {
-        // Get water depth from weather preset
-        const waterDepths = {
-            'DRY': 0, 'DAMP': 0.1, 'LIGHT_RAIN': 0.3, 'RAIN': 0.7, 'HEAVY_RAIN': 1.5
-        };
-        const waterMm = waterDepths[GameState.selectedWeather] || 0.7;
-
-        // 3-state wetness system with blending
-        const isDry = waterMm <= 0;
-        const isDamp = waterMm > 0 && waterMm <= 0.5;
-        const isWet = waterMm > 0.5;
-        const dampBlend = isDamp ? (waterMm / 0.5) : (isWet ? 1.0 : 0.0);
-
-        // Base surface friction based on surface type
-        const surfaceData = GAME_CONFIG.surfaces[GameState.selectedSurface] || GAME_CONFIG.surfaces['ASPHALT_STD'];
-        let baseMu = isDry ? surfaceData.baseMu : surfaceData.wetMu;
-
-        // ABS factor
-        const absFactor = GameState.hasABS ? 1.00 : 0.85;
-        let mu = baseMu * absFactor;
-
-        // Weather factor (water depth effect per v3.4.3)
-        let weatherFactor;
-        if (waterMm <= 0) weatherFactor = 1.00;
-        else if (waterMm <= 0.2) weatherFactor = 1.00 - (waterMm * 0.50);
-        else if (waterMm <= 0.5) weatherFactor = 0.90 - ((waterMm - 0.2) * 0.50);
-        else if (waterMm <= 1.0) weatherFactor = 0.75 - ((waterMm - 0.5) * 0.30);
-        else if (waterMm <= 2.0) weatherFactor = 0.60 - ((waterMm - 1.0) * 0.15);
-        else weatherFactor = 0.45 - ((waterMm - 2.0) * 0.12);
-        weatherFactor = Math.max(0.05, weatherFactor);
-        mu *= weatherFactor;
-
-        // EU Grade factor (v3.4.3 values) - blended for damp conditions
-        const gradeWetFactors = { A: 1.15, B: 1.06, C: 1.00, D: 0.89, E: 0.80 };
-        const wetFactor = gradeWetFactors[GameState.selectedGrade] || 1.00;
-        const dryAdjust = 0.40;
-        const dryFactor = 1.0 + (wetFactor - 1.0) * dryAdjust;
-        const gradeFactor = dryFactor + (wetFactor - dryFactor) * dampBlend;
-        mu *= gradeFactor;
-
-        // Tread depth factor (piecewise with collapse below 4mm) - blended
-        const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
-        let treadWetFactor, treadDryFactor;
-
-        // Wet tread factor (piecewise per v3.4.3)
-        if (treadMm >= 8) treadWetFactor = 1.00;
-        else if (treadMm >= 4) treadWetFactor = 0.64 + (0.045 * treadMm);
-        else if (treadMm >= 1.6) treadWetFactor = 0.304 + (0.129 * treadMm);
-        else treadWetFactor = 0.304 + (0.129 * treadMm);
-        treadWetFactor = Math.max(0.20, Math.min(1.00, treadWetFactor));
-
-        // Dry tread factor (gentle decline)
-        treadDryFactor = 0.88 + (0.015 * Math.min(8, treadMm));
-
-        // Blend based on wetness
-        const treadFactor = treadDryFactor + (treadWetFactor - treadDryFactor) * dampBlend;
-        mu *= treadFactor;
-
-        // Age factor (accelerating degradation per v3.4.3)
-        const ageYears = GameState.selectedAge;
-        let ageFactor;
-        if (ageYears <= 0) ageFactor = 1.00;
-        else if (ageYears <= 2) ageFactor = 1.00 - (0.01 * ageYears);
-        else if (ageYears <= 4) ageFactor = 0.98 - (0.025 * (ageYears - 2));
-        else if (ageYears <= 6) ageFactor = 0.93 - (0.040 * (ageYears - 4));
-        else if (ageYears <= 8) ageFactor = 0.85 - (0.060 * (ageYears - 6));
-        else if (ageYears <= 10) ageFactor = 0.73 - (0.070 * (ageYears - 8));
-        else ageFactor = 0.59 - (0.050 * (ageYears - 10));
-        ageFactor = Math.max(0.35, ageFactor);
-        mu *= ageFactor;
-
-        // Tyre type factor (winter/all-season better in wet)
-        const tyreTypeFactors = { 'summer': 1.00, 'allseason': 1.04, 'winter': 1.10 };
-        const tyreTypeFactor = isDry ? 1.00 : (tyreTypeFactors[GameState.selectedTyreType] || 1.00);
-        mu *= tyreTypeFactor;
-
-        // Pressure factor (deviation from optimal 32 PSI)
-        const optimalPsi = 32;
-        const deviation = Math.abs(GameState.selectedPressure - optimalPsi);
-        let pressureFactor = 1.00;
-        if (deviation > 0) {
-            pressureFactor = Math.max(0.70, 1.00 - (deviation * 0.015));
-        }
-        mu *= pressureFactor;
-
-        // Width factor - wider tyres hydroplane easier in wet, but more grip in dry
-        const widthData = GAME_CONFIG.tyreWidths[GameState.selectedWidth] || GAME_CONFIG.tyreWidths[205];
-        let widthFactor = 1.00;
-        if (!isDry) {
-            widthFactor = 1.00 / widthData.hydroRisk;
-        } else {
-            widthFactor = 1.00 + ((GameState.selectedWidth - 205) / 205) * 0.05;
-        }
-        widthFactor = Math.max(0.70, Math.min(1.15, widthFactor));
-        mu *= widthFactor;
-
-        // Vehicle weight factor
-        const vehicleData = GAME_CONFIG.vehicles[GameState.selectedVehicle] || GAME_CONFIG.vehicles['sedan'];
-        const vehicleFactor = 1.00 / vehicleData.factor;
-        mu *= vehicleFactor;
-
-        // Temperature factor
-        let tempFactor = 1.00;
-        const coldThreshold = 7;
-        const hotThreshold = 35;
-        const temp = GameState.selectedTemp;
-
-        if (temp < coldThreshold) {
-            if (GameState.selectedTyreType === 'summer') {
-                tempFactor = 0.80 + (temp / coldThreshold) * 0.20;
-            } else if (GameState.selectedTyreType === 'allseason') {
-                tempFactor = 0.90 + (temp / coldThreshold) * 0.10;
+            if (decelerationMs2 <= 0) {
+                // Cannot stop - gravity > friction on steep downhill
+                if (!GameState.cannotStopWarned) {
+                    GameState.cannotStopWarned = true;
+                    console.warn('CANNOT STOP: Friction insufficient for slope. Deceleration:', decelerationMs2.toFixed(3));
+                }
+                GameState.speed -= decelerationKmhPerSec * dt; // Adds speed since decel is negative
             } else {
-                tempFactor = 1.05;
+                GameState.speed -= decelerationKmhPerSec * dt;
             }
-        } else if (temp > hotThreshold) {
-            const heatPenalty = (temp - hotThreshold) * 0.01;
-            tempFactor = Math.max(0.85, 1.00 - heatPenalty);
-        }
-        tempFactor = Math.max(0.60, Math.min(1.10, tempFactor));
-        mu *= tempFactor;
 
-        // Brake fade factor (v3.4.3 - was missing from simulation)
-        let brakeFadeFactor = 1.00;
-        const fadeLevel = GameState.brakeFadeLevel || 0;
-        if (fadeLevel > 0) {
-            // Fade reduces braking effectiveness progressively
-            // 0-3: mild (0-15% loss), 4-6: moderate (15-35%), 7-10: severe (35-65%)
-            if (fadeLevel <= 3) {
-                brakeFadeFactor = 1.00 - (fadeLevel * 0.05);
-            } else if (fadeLevel <= 6) {
-                brakeFadeFactor = 0.85 - ((fadeLevel - 3) * 0.067);
-            } else {
-                brakeFadeFactor = 0.65 - ((fadeLevel - 6) * 0.075);
-            }
-            brakeFadeFactor = Math.max(0.35, brakeFadeFactor);
-        }
-        mu *= brakeFadeFactor;
-
-        // Tyre compound factor (v3.4.3 - was missing from simulation)
-        let compoundFactor = 1.00;
-        const compound = GameState.selectedCompound || 'touring';
-        const compoundFactors = {
-            'economy': 0.88,      // Budget: -12% grip
-            'touring': 1.00,      // Standard: baseline
-            'performance': 1.06,  // Sport: +6% grip
-            'uhp': 1.12,          // Ultra High Performance: +12% grip
-            'track': isDry ? 1.25 : 0.85  // Track: +25% dry, -15% wet
-        };
-        compoundFactor = compoundFactors[compound] || 1.00;
-        mu *= compoundFactor;
-
-        // Calculate deceleration with slope (v3.4.3 - was missing from simulation)
-        const slopeDeg = GameState.slopeDegrees || 0;
-        const slopeRad = (slopeDeg * Math.PI) / 180;
-
-        // Deceleration: a = g * (μ * cos(θ) + sin(θ))
-        // Positive slope (uphill) helps braking, negative (downhill) hurts
-        const decelerationMs2 = GRAVITY * (mu * Math.cos(slopeRad) + Math.sin(slopeRad));
-
-        // Convert to km/h per second: multiply by 3.6
-        const decelerationKmhPerSec = decelerationMs2 * 3.6;
-
-        // Handle case where vehicle cannot stop (gravity > friction on steep downhill)
-        if (decelerationMs2 <= 0) {
-            // Vehicle is accelerating or not slowing - CANNOT STOP
-            // Mark as "cannot stop" scenario
-            if (!GameState.cannotStopWarned) {
-                GameState.cannotStopWarned = true;
-                console.warn('CANNOT STOP: Friction insufficient for slope. Deceleration:', decelerationMs2.toFixed(3));
-            }
-            // Continue accelerating (negative deceleration = acceleration)
-            GameState.speed -= decelerationKmhPerSec * dt; // This adds speed since decel is negative
-        } else {
-            // Apply deceleration normally
-            GameState.speed -= decelerationKmhPerSec * dt;
+        } else if (GameState.brakeState === 'RELEASED' && GameState.speed > 0) {
+            // Brake released - gentle coasting (rolling resistance + drag only)
+            // This is LESS deceleration than full braking
+            const coastingDecel = calculateBrakeReleaseDeceleration();
+            GameState.speed -= coastingDecel * dt;
         }
 
-        // Cap maximum distance to prevent infinite scenarios (10km safety limit)
+        // Safety limits
         const currentBrakingDist = GameState.position - GameState.brakePosition;
         if (currentBrakingDist > 10000) {
-            // Force stop at 10km - this is an extreme scenario
             GameState.speed = 0;
             GameState.cannotStop = true;
             completeTest();
             return;
         }
 
-        // Use a small threshold to avoid floating point issues
+        // Check if stopped
         if (GameState.speed <= 0.5) {
             GameState.speed = 0;
             completeTest();
-            return; // Stop further updates
+            return;
         }
     }
 
@@ -2926,13 +4057,54 @@ function update(dt) {
     // Update braking distance in HUD
     const hudBraking = document.getElementById('hud-braking');
     if (hudBraking) {
-        if (GameState.isBraking) {
+        if (GameState.drivingPhase === 'BRAKING') {
             const brakingDist = GameState.position - GameState.brakePosition;
             hudBraking.textContent = `${brakingDist.toFixed(1)} m`;
         } else {
             hudBraking.textContent = '0 m';
         }
     }
+
+    // Update driving state indicator
+    updateDrivingStateHUD();
+}
+
+/**
+ * Update HUD to show current driving state (throttle/brake/coasting)
+ */
+function updateDrivingStateHUD() {
+    const stateEl = document.getElementById('driving-state');
+    if (!stateEl) return;
+
+    let stateText = '';
+    let stateClass = '';
+
+    if (GameState.drivingPhase === 'ACCELERATION') {
+        if (GameState.throttleState === 'PRESSED') {
+            stateText = 'ACCELERATING';
+            stateClass = 'state-accel';
+        } else if (GameState.speed > 0) {
+            stateText = 'COASTING';
+            stateClass = 'state-coast';
+        } else {
+            stateText = 'STOPPED';
+            stateClass = 'state-stop';
+        }
+    } else if (GameState.drivingPhase === 'BRAKING') {
+        if (GameState.brakeState === 'PRESSED') {
+            stateText = 'BRAKING';
+            stateClass = 'state-brake';
+        } else if (GameState.speed > 0) {
+            stateText = 'COASTING';
+            stateClass = 'state-coast';
+        } else {
+            stateText = 'STOPPED';
+            stateClass = 'state-stop';
+        }
+    }
+
+    stateEl.textContent = stateText;
+    stateEl.className = 'driving-state ' + stateClass;
 }
 
 function render() {
@@ -3089,7 +4261,7 @@ function showResults() {
     updateRangeDisplay();
 
     // Populate the "Why this result?" drawer
-    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
     updateWhyDrawer(
         GameState.brakeSpeed,
         GameState.selectedGrade,
@@ -3098,10 +4270,139 @@ function showResults() {
         GameState.selectedAge,
         GameState.stoppedDistance
     );
+
+    // Auto-save this run and update saved runs display
+    autoSaveRun();
+    updateSavedRunsDisplay();
+
+    // Check if this was a challenge and show result
+    const challengeResult = checkChallengeResult();
+    if (challengeResult) {
+        showChallengeResultBanner(challengeResult);
+    }
+}
+
+function showChallengeResultBanner(result) {
+    const existingBanner = document.getElementById('challenge-result-banner');
+    if (existingBanner) existingBanner.remove();
+
+    const banner = document.createElement('div');
+    banner.className = `challenge-result-banner ${result.won ? 'won' : 'lost'}`;
+    banner.id = 'challenge-result-banner';
+    banner.innerHTML = `
+        <div class="challenge-result-content">
+            <span class="challenge-result-icon">${result.won ? '🎉' : '😅'}</span>
+            <span class="challenge-result-message">${result.message}</span>
+        </div>
+    `;
+
+    const panel = document.getElementById('results-panel');
+    if (panel) {
+        panel.insertBefore(banner, panel.firstChild.nextSibling);
+    }
+}
+
+// =====================================================
+// SAVE & COMPARE FEATURE
+// =====================================================
+
+function autoSaveRun() {
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
+    const weatherLabel = GAME_CONFIG.weatherPresets[GameState.selectedWeather]?.label || 'Wet';
+    const vehicleLabel = GAME_CONFIG.vehicles[GameState.selectedVehicle]?.name || 'Sedan';
+
+    const runData = {
+        distance: GameState.stoppedDistance.toFixed(1),
+        speed: Math.round(GameState.brakeSpeed),
+        grade: GameState.selectedGrade,
+        treadMm: treadMm,
+        weather: weatherLabel,
+        vehicle: vehicleLabel,
+        surface: GameState.selectedSurface,
+        hasABS: GameState.hasABS,
+        tyreAge: GameState.selectedAge
+    };
+
+    SavedRuns.saveRun(runData);
+}
+
+function updateSavedRunsDisplay() {
+    const container = document.getElementById('saved-runs-container');
+    if (!container) return;
+
+    const runs = SavedRuns.getRuns();
+
+    if (runs.length === 0) {
+        container.innerHTML = '<p class="no-runs">No saved runs yet. Complete more tests to compare!</p>';
+        return;
+    }
+
+    let html = '<div class="saved-runs-header"><h4>Recent Tests (Last 5)</h4>';
+    if (runs.length > 1) {
+        html += '<button class="btn-clear-runs" onclick="clearAllRuns()">Clear All</button>';
+    }
+    html += '</div><div class="saved-runs-list">';
+
+    runs.forEach((run, index) => {
+        const isCurrent = index === 0;
+        const currentClass = isCurrent ? 'current-run' : '';
+        const currentBadge = isCurrent ? '<span class="current-badge">JUST NOW</span>' : '';
+
+        html += `
+            <div class="saved-run ${currentClass}" data-run-id="${run.id}">
+                <div class="run-main">
+                    <span class="run-distance">${run.distance}m</span>
+                    <span class="run-speed">@ ${run.speed} km/h</span>
+                    ${currentBadge}
+                </div>
+                <div class="run-details">
+                    <span class="run-grade">Grade ${run.grade}</span>
+                    <span class="run-tread">${run.treadMm}mm</span>
+                    <span class="run-weather">${run.weather}</span>
+                    <span class="run-vehicle">${run.vehicle}</span>
+                </div>
+                ${!isCurrent ? `<button class="btn-delete-run" onclick="deleteRun(${run.id})">×</button>` : ''}
+            </div>
+        `;
+    });
+
+    html += '</div>';
+
+    // Add comparison summary if multiple runs
+    if (runs.length > 1) {
+        const distances = runs.map(r => parseFloat(r.distance));
+        const best = Math.min(...distances);
+        const worst = Math.max(...distances);
+        const current = distances[0];
+
+        let comparisonText = '';
+        if (current === best) {
+            comparisonText = `<span class="comparison-good">This is your best result!</span>`;
+        } else {
+            const diff = (current - best).toFixed(1);
+            comparisonText = `<span class="comparison-info">${diff}m longer than your best (${best}m)</span>`;
+        }
+
+        html += `<div class="runs-comparison">${comparisonText}</div>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function deleteRun(id) {
+    SavedRuns.deleteRun(id);
+    updateSavedRunsDisplay();
+}
+
+function clearAllRuns() {
+    if (confirm('Clear all saved test runs?')) {
+        SavedRuns.clearAll();
+        updateSavedRunsDisplay();
+    }
 }
 
 function updateRangeDisplay() {
-    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
     const speed = GameState.brakeSpeed;
     const weather = GameState.selectedWeather;
     const surface = GameState.selectedSurface;
@@ -3225,7 +4526,7 @@ function buildDetailedStats() {
                         </div>
                         <div class="stat-row">
                             <span>Tread Depth</span>
-                            <strong>${GAME_CONFIG.treadPresets[GameState.selectedTread].value}mm</strong>
+                            <strong>${GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8}mm</strong>
                         </div>
                         <div class="stat-row">
                             <span>Tyre Age</span>
@@ -3424,7 +4725,7 @@ function generateInsight() {
     const grade = GameState.selectedGrade;
     const speed = Math.round(GameState.brakeSpeed);
     const yourDist = GameState.stoppedDistance;
-    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
     const surfaceLabel = GAME_CONFIG.surfaces[GameState.selectedSurface]?.label || 'road';
     const weatherLabel = GAME_CONFIG.weatherPresets[GameState.selectedWeather]?.label || 'wet';
 
@@ -3614,17 +4915,18 @@ function generateShareData() {
     const grade = GameState.selectedGrade;
     const speed = Math.round(GameState.brakeSpeed);
     const distance = GameState.stoppedDistance.toFixed(1);
-    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread].value;
+    const treadMm = GAME_CONFIG.treadPresets[GameState.selectedTread]?.value || 8;
     const weather = GAME_CONFIG.weatherPresets[GameState.selectedWeather]?.label || 'wet';
     const surface = GAME_CONFIG.surfaces[GameState.selectedSurface]?.label || 'asphalt';
+    const vehicle = GAME_CONFIG.vehicles[GameState.selectedVehicle]?.name || 'Sedan';
 
-    // Create a summary message
-    const summary = `I stopped in ${distance}m from ${speed} km/h with Grade ${grade} tyres on ${weather} ${surface}!`;
+    // Create a challenge message
+    const summary = `I stopped my ${vehicle} in ${distance}m from ${speed} km/h! Can you beat that?`;
 
-    // Create a shareable text
-    const shareText = `Ultimate Tyre Simulator: ${summary} Test your tyre knowledge at`;
+    // Create challenge text for social sharing
+    const challengeText = `I stopped in ${distance}m from ${speed} km/h in the Ultimate Tyre Simulator. Think YOUR car can brake shorter? Take the challenge!`;
 
-    // Generate URL parameters for sharing (base64 encoded config)
+    // Generate URL parameters for challenge (base64 encoded config)
     const config = {
         g: grade,
         s: speed,
@@ -3632,18 +4934,23 @@ function generateShareData() {
         t: treadMm,
         w: GameState.selectedWeather,
         a: GameState.selectedAge,
-        sf: GameState.selectedSurface
+        sf: GameState.selectedSurface,
+        v: GameState.selectedVehicle,
+        challenge: true,
+        challengeDistance: distance
     };
 
     const configParam = btoa(JSON.stringify(config));
 
     return {
         summary,
-        shareText,
+        challengeText,
         configParam,
         distance,
         speed,
-        grade
+        grade,
+        vehicle,
+        weather
     };
 }
 
@@ -3652,21 +4959,32 @@ function openShareModal() {
     const shareSummary = document.getElementById('share-summary');
     const shareLink = document.getElementById('share-link');
     const copiedMsg = document.getElementById('share-copied');
+    const challengeTarget = document.getElementById('challenge-target');
 
     const data = generateShareData();
 
-    // Set summary text
+    // Set challenge summary text
     if (shareSummary) {
         shareSummary.innerHTML = `
-            <strong>Your Result:</strong><br>
-            Grade ${data.grade} tyres at ${data.speed} km/h<br>
-            Braking distance: <strong>${data.distance}m</strong>
+            <div class="challenge-result">
+                <div class="challenge-icon">🏆</div>
+                <div class="challenge-stats">
+                    <span class="challenge-distance">${data.distance}m</span>
+                    <span class="challenge-details">${data.vehicle} @ ${data.speed} km/h on ${data.weather}</span>
+                </div>
+            </div>
+            <p class="challenge-prompt">Challenge a friend to beat your stopping distance!</p>
         `;
     }
 
+    // Show the target to beat
+    if (challengeTarget) {
+        challengeTarget.innerHTML = `<strong>Target to beat:</strong> ${data.distance}m`;
+    }
+
     // Generate the share link - use the Shopify page URL
-    const baseUrl = 'https://www.tyredispatch.co.nz/pages/breaking-simulator';
-    const shareUrl = `${baseUrl}?r=${data.configParam}`;
+    const baseUrl = 'https://www.tyredispatch.co.nz/pages/braking-simulator';
+    const shareUrl = `${baseUrl}?c=${data.configParam}`;
 
     if (shareLink) {
         shareLink.value = shareUrl;
@@ -3681,6 +4999,81 @@ function openShareModal() {
     if (shareModal) {
         shareModal.classList.remove('hidden');
     }
+}
+
+// Check if user came from a challenge link
+function checkChallengeMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const challengeParam = urlParams.get('c');
+
+    if (challengeParam) {
+        try {
+            const challengeData = JSON.parse(atob(challengeParam));
+            if (challengeData.challenge && challengeData.challengeDistance) {
+                showChallengeBanner(challengeData);
+            }
+        } catch (e) {
+            console.log('Invalid challenge data');
+        }
+    }
+}
+
+function showChallengeBanner(challengeData) {
+    // Create and show challenge banner
+    const banner = document.createElement('div');
+    banner.className = 'challenge-banner';
+    banner.id = 'challenge-banner';
+    banner.innerHTML = `
+        <div class="challenge-banner-content">
+            <span class="challenge-banner-icon">🎯</span>
+            <div class="challenge-banner-text">
+                <strong>CHALLENGE MODE!</strong>
+                <span>Beat ${challengeData.d}m to win!</span>
+            </div>
+            <button class="challenge-banner-close" onclick="dismissChallenge()">×</button>
+        </div>
+    `;
+
+    document.body.insertBefore(banner, document.body.firstChild);
+
+    // Store challenge target for comparison
+    window.challengeTarget = parseFloat(challengeData.d);
+}
+
+function dismissChallenge() {
+    const banner = document.getElementById('challenge-banner');
+    if (banner) {
+        banner.remove();
+    }
+    window.challengeTarget = null;
+}
+
+function checkChallengeResult() {
+    if (window.challengeTarget && GameState.stoppedDistance > 0) {
+        const target = window.challengeTarget;
+        const result = GameState.stoppedDistance;
+
+        if (result < target) {
+            return {
+                won: true,
+                message: `YOU WON! You beat the challenge by ${(target - result).toFixed(1)}m!`,
+                diff: (target - result).toFixed(1)
+            };
+        } else if (result > target) {
+            return {
+                won: false,
+                message: `So close! You needed ${(result - target).toFixed(1)}m less to win.`,
+                diff: (result - target).toFixed(1)
+            };
+        } else {
+            return {
+                won: true,
+                message: `TIED! You matched the challenge exactly!`,
+                diff: '0'
+            };
+        }
+    }
+    return null;
 }
 
 function closeShareModal() {
@@ -3736,7 +5129,7 @@ function shareToTwitter() {
     const shareLink = document.getElementById('share-link');
     const url = shareLink ? shareLink.value : window.location.href;
 
-    const tweetText = encodeURIComponent(`${data.shareText}`);
+    const tweetText = encodeURIComponent(`${data.challengeText}`);
     const tweetUrl = encodeURIComponent(url);
 
     window.open(
@@ -3794,6 +5187,7 @@ function toggleDocumentation() {
 document.addEventListener('DOMContentLoaded', () => {
     init();
     initShareFeature();
+    checkChallengeMode(); // Check if user came from a challenge link
 
     // Set dynamic copyright year
     const copyrightEl = document.getElementById('footer-copyright');
